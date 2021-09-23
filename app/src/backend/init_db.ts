@@ -1,5 +1,5 @@
 import db from "./db";
-import student from "./students/student_model";
+import { model } from "./students/student_model";
 async function initialise(): Promise<void> {
   try {
     await db.authenticate();
@@ -9,9 +9,9 @@ async function initialise(): Promise<void> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  student(db);
+  model(db);
 
-  await db.sync({ force: true });
+  await db.sync({ alter: true });
 }
 
 export default initialise;
