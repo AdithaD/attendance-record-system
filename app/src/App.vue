@@ -1,9 +1,16 @@
 <template>
-  <router-view />
+  <div class="relative min-h-screen flex bg-gray-800">
+    <Sidebar />
+    <router-view />
+  </div>
 </template>
 
 <script>
-export default {};
-</script>
+import Sidebar from "./views/Sidebar.vue";
 
-<style></style>
+export default {
+  components: {
+    Sidebar,
+  },
+};
+</script>
