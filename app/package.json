@@ -16,6 +16,7 @@
         "@tailwindcss/postcss7-compat": "^2.0.2",
         "autoprefixer": "^9",
         "core-js": "^3.6.5",
+        "dayjs": "^1.10.7",
         "pg-hstore": "^2.3.4",
         "postcss": "^7",
         "sequelize": "^6.6.5",

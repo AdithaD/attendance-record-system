@@ -1,9 +1,16 @@
 <template>
-  <router-view />
+  <div class="relative h-screen flex bg-gray-800 overflow-hidden">
+    <Sidebar class="" />
+    <router-view class="overflow-y-scroll" />
+  </div>
 </template>
 
 <script>
-export default {};
-</script>
+import Sidebar from "./views/Sidebar.vue";
 
-<style></style>
+export default {
+  components: {
+    Sidebar,
+  },
+};
+</script>
