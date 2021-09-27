@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 space-y-8 w-screen">
+  <div class="p-4 space-y-12 w-screen">
     <div class="flex justify-between items-stretch">
       <h1
         class="
@@ -28,7 +28,7 @@
           self-center
           transition
           transform
-          hover:scale-105
+          hover:scale-105 hover:bg-blue-500
         "
         type="button"
         @click="$router.push({ name: 'AddStudent' })"
@@ -94,25 +94,87 @@
       </div>
     </div>
 
-    <div class="rounded shadow-md bg-gray-700 py-2 px-4">
-      <h2 class="text-2xl text-gray-200 font-bold">Top Students</h2>
+    <div class="rounded shadow-md bg-gray-700 py-2 px-4 h-3/5 flex flex-col">
+      <h2 class="text-2xl text-gray-200 font-bold mb-4">Top Students</h2>
+      <div
+        v-if="this.students.length > 0"
+        class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll max-h-full"
+      >
+        <div
+          @click="openProfile(i)"
+          v-for="(student, i) in this.students"
+          :key="student.getDataValue('studentId')"
+          class="flex space-x-2"
+        >
+          <p
+            class="
+              bg-blue-500
+              text-gray-200
+              p-4
+              font-semibold
+              flex-none
+              w-12
+              text-center
+              rounded
+            "
+          >
+            {{ i + 1 }}
+          </p>
+          <p
+            class="
+              bg-gray-700
+              py-4
+              text-gray-200
+              font-semibold
+              shadow-md
+              px-2
+              border border-blue-500
+              rounded
+              transition-colors
+              hover:text-white hover:border-blue-300
+              flex-grow
+            "
+          >
+            {{ student.getDataValue("firstName") }}
+            {{ student.getDataValue("lastName") }}
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { Student } from "@/backend/students/student_model";
+import router from "@/router";
+import { defineComponent } from "@vue/runtime-core";
+export default defineComponent({
   data() {
     return {
+      students: [] as Student[],
       isSearchOptionsOpen: false,
     };
   },
   methods: {
-    toggle() {
+    toggle(): void {
       this.isSearchOptionsOpen = !this.isSearchOptionsOpen;
     },
+    openProfile(key: number) {
+      router.push({ name: "StudentProfile", params: { id: key + 1 } });
+    },
   },
-};
+  mounted(): void {
+    Student.findAll()
+      .then((data) => {
+        this.students = data;
+      })
+      .then(() => {
+        this.students.forEach((data) =>
+          console.log(data.getDataValue("studentId"))
+        );
+      });
+  },
+});
 </script>
 
 <style></style>

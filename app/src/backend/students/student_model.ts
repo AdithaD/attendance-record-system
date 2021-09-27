@@ -5,7 +5,7 @@ interface StudentAttributes {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  notes: Text | null;
+  notes: string | null;
 }
 
 type StudentCreationAttributes = Optional<StudentAttributes, "studentId">;
@@ -43,7 +43,9 @@ export function model(sequelize: Sequelize): void {
     },
     {
       sequelize,
-      tableName: "Student",
+      modelName: "Student",
     }
   );
+  console.log(Student.sequelize);
+  console.log(Student === sequelize.models.Student);
 }

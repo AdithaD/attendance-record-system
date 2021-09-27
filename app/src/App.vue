@@ -1,7 +1,7 @@
 <template>
-  <div class="relative min-h-screen flex bg-gray-800">
-    <Sidebar />
-    <router-view />
+  <div class="relative h-screen flex bg-gray-800 overflow-hidden">
+    <Sidebar class="" />
+    <router-view class="overflow-y-scroll" />
   </div>
 </template>
 

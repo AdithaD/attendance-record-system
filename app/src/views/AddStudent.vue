@@ -109,7 +109,8 @@ import TextField from "../components/TextField.vue";
 import DateField from "../components/DateField.vue";
 import dayjs from "dayjs";
 import { defineComponent } from "vue";
-
+import { createStudent } from "@/backend/students/student_service";
+import router from "@/router";
 export default defineComponent({
   components: {
     TextField,
@@ -150,6 +151,13 @@ export default defineComponent({
       }
 
       if (this.errors.length == 0) {
+        createStudent(
+          this.fname,
+          this.lname,
+          dayjs(this.dob).toDate(),
+          this.notes
+        );
+        router.back();
         return true;
       } else {
         e.preventDefault();

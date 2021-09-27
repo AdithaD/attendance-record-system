@@ -54,6 +54,9 @@
         </button>
       </div>
     </div>
+    <div class="rounded shadow-md bg-gray-700 py-2 px-4">
+      <h2 class="text-2xl text-gray-200 font-bold">Schedule</h2>
+    </div>
   </div>
 </template>
 
