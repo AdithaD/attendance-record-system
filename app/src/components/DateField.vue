@@ -5,7 +5,7 @@
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       class="py-2 px-2 rounded bg-gray-900 text-gray-300 w-full"
-      placeholder="dd/mm/yyyy"
+      placeholder="DD/MM/YYYY"
     />
   </div>
 </template>

@@ -34,6 +34,11 @@
         class="block py-2.5 px-4 hover:bg-blue-500 transition duration-200"
         >Badges</router-link
       >
+      <router-link
+        to="/Attendance"
+        class="block py-2.5 px-4 hover:bg-blue-500 transition duration-200"
+        >Record Attendance</router-link
+      >
     </nav>
   </div>
 </template>

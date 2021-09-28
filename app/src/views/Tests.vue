@@ -15,7 +15,7 @@
       >
         Tests
       </h1>
-      <div class="h-full space-x-4 self-center">
+      <div class="space-x-4 self-center flex">
         <button
           class="
             rounded

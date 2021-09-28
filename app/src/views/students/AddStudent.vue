@@ -105,8 +105,8 @@
 </template>
 
 <script lang="ts">
-import TextField from "../components/TextField.vue";
-import DateField from "../components/DateField.vue";
+import TextField from "@/components/TextField.vue";
+import DateField from "@/components/DateField.vue";
 import dayjs from "dayjs";
 import { defineComponent } from "vue";
 import { createStudent } from "@/backend/students/student_service";
@@ -127,7 +127,8 @@ export default defineComponent({
   },
   methods: {
     validDate: function (date: string): boolean {
-      return dayjs(date).isValid();
+      console.log(date);
+      return dayjs("19/07/2001", "DD/MM/YYYY", false).isValid();
     },
     validate: function (e: Event): boolean {
       while (this.errors.length > 0) {
@@ -154,7 +155,7 @@ export default defineComponent({
         createStudent(
           this.fname,
           this.lname,
-          dayjs(this.dob).toDate(),
+          dayjs(this.dob, "DD/MM/YYYY").toDate(),
           this.notes
         );
         router.back();
