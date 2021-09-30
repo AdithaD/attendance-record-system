@@ -20,3 +20,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #1d4ed8;
 }
+
+@layer base {
+  .title {
+    @apply rounded shadow-md py-2 px-4 text-4xl text-gray-200 bg-gray-700 font-bold w-max;
+  }
+
+  .large-button {
+    @apply rounded shadow-md py-2 px-4 bg-blue-700 text-gray-200 text-xl font-bold h-1/4 self-center transition transform hover:scale-105;
+  }
+}

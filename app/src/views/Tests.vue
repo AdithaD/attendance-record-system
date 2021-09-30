@@ -1,20 +1,7 @@
 <template>
   <div class="p-4 space-y-12 w-screen">
     <div class="flex justify-between items-stretch">
-      <h1
-        class="
-          rounded
-          shadow-md
-          py-2
-          px-4
-          text-4xl text-gray-200
-          bg-gray-700
-          font-bold
-          w-max
-        "
-      >
-        Tests
-      </h1>
+      <h1 class="title">Tests</h1>
       <div class="space-x-4 self-center flex">
         <button
           class="

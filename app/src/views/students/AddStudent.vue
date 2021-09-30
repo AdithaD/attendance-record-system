@@ -4,20 +4,7 @@
     class="p-4 space-y-8 w-screen h-screen flex flex-col"
   >
     <div class="flex justify-between items-stretch">
-      <h1
-        class="
-          rounded
-          shadow-md
-          py-2
-          px-4
-          text-4xl text-gray-200
-          bg-gray-700
-          font-bold
-          w-max
-        "
-      >
-        Add Student
-      </h1>
+      <h1 class="title">Add Student</h1>
       <div class="flex space-x-4">
         <button
           class="

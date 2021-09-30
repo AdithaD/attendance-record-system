@@ -27,7 +27,12 @@
       <router-link
         to="/Tests"
         class="block py-2.5 px-4 hover:bg-blue-500 transition duration-200"
-        >Tests / Topics / Parts</router-link
+        >Tests</router-link
+      >
+      <router-link
+        to="/Topics"
+        class="block py-2.5 px-4 hover:bg-blue-500 transition duration-200"
+        >Topic Library</router-link
       >
       <router-link
         to="/Badges"

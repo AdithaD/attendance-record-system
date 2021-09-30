@@ -2,18 +2,7 @@
   <div class="p-4 space-y-8 w-screen">
     <div v-if="this.student != null" class="space-y-8">
       <div class="flex justify-between items-stretch">
-        <h1
-          class="
-            rounded
-            shadow-md
-            py-2
-            px-4
-            text-4xl text-gray-200
-            bg-gray-700
-            font-bold
-            w-max
-          "
-        >
+        <h1 class="title">
           {{ this.student.getDataValue("firstName") }}
           {{ this.student.getDataValue("lastName") }}
         </h1>
@@ -104,21 +93,7 @@
         <h2 class="text-2xl text-gray-200 font-bold">Attendance</h2>
       </div>
     </div>
-    <h1
-      class="
-        rounded
-        shadow-md
-        py-2
-        px-4
-        text-4xl text-gray-200
-        bg-gray-700
-        font-bold
-        w-max
-      "
-      v-else
-    >
-      No Student Found
-    </h1>
+    <h1 class="title" v-else>No Student Found</h1>
   </div>
 </template>
 

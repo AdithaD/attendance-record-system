@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 import sqlite3 from "sqlite3";
 
 import { model as student } from "./students/student_model";
-
+import { model as part } from "./parts/part_model";
 export const db = new Sequelize({
   dialectModule: sqlite3,
   dialect: "sqlite",
@@ -19,6 +19,7 @@ export async function initialise(): Promise<void> {
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   student(db);
+  part(db);
 
   await db.sync({ alter: true }).then(() => {
     console.log("db initialized");

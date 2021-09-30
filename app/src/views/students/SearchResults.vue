@@ -1,17 +1,6 @@
 <template>
   <div class="p-4 space-y-8 w-screen flex flex-wrap flex-col">
-    <h1
-      class="
-        rounded
-        shadow-md
-        py-2
-        px-4
-        text-4xl text-gray-200
-        bg-gray-700
-        font-bold
-      "
-      v-if="this.terms != null"
-    >
+    <h1 class="title" v-if="this.terms != null">
       Results for {{ this.combineString() }}
     </h1>
     <div

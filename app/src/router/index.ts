@@ -7,6 +7,8 @@ import AddStudent from "../views/students/AddStudent.vue";
 import StudentProfile from "../views/students/StudentProfile.vue";
 import SearchResults from "../views/students/SearchResults.vue";
 import RecordAttendance from "../views/attendance/RecordAttendance.vue";
+import Topics from "../views/badges/Topics.vue";
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -47,6 +49,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/Attendance",
     name: "RecordAttendance",
     component: RecordAttendance,
+  },
+  {
+    path: "/Topics",
+    name: "Topics",
+    component: Topics,
   },
 ];
 
