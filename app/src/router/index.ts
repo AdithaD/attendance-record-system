@@ -7,7 +7,8 @@ import AddStudent from "../views/students/AddStudent.vue";
 import StudentProfile from "../views/students/StudentProfile.vue";
 import SearchResults from "../views/students/SearchResults.vue";
 import RecordAttendance from "../views/attendance/RecordAttendance.vue";
-import Topics from "../views/badges/Topics.vue";
+import AddTopic from "../views/badges/AddTopic.vue";
+import AddTest from "../views/badges/AddTest.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -51,9 +52,14 @@ const routes: Array<RouteRecordRaw> = [
     component: RecordAttendance,
   },
   {
-    path: "/Topics",
-    name: "Topics",
-    component: Topics,
+    path: "/Test/AddTopic",
+    name: "AddTopic",
+    component: AddTopic,
+  },
+  {
+    path: "/Test/AddTest",
+    name: "AddTest",
+    component: AddTest,
   },
 ];
 

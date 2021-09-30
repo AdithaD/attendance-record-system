@@ -36,6 +36,7 @@
             hover:scale-105
           "
           type="button"
+          @click="$router.push({ name: 'AddTest' })"
         >
           Add Test
         </button>

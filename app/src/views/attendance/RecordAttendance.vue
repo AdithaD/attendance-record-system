@@ -4,8 +4,8 @@
     <div class="">
       <DateField v-model="this.date" title="Event Date" />
     </div>
-    <div class="mt-4 mb-4 max-h-72 flex justify-between space-x-8">
-      <div>
+    <div class="mt-4 mb-4 flex justify-between space-x-8">
+      <div class="flex flex-col">
         <h2 class="text-2xl text-gray-200 font-bold mb-4">Students</h2>
         <div
           class="
@@ -16,6 +16,7 @@
             py-2
             px-2
             space-y-2
+            max-h-72
             flex flex-col
           "
         >
@@ -54,14 +55,7 @@
           </div>
           <div
             v-if="this.students.length > 0"
-            class="
-              bg-gray-900
-              p-4
-              rounded
-              space-y-4
-              overflow-y-scroll
-              flex-grow
-            "
+            class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll"
           >
             <div
               v-for="student in this.unselectedStudents"
@@ -89,89 +83,78 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="flex flex-col">
         <h2 class="text-2xl text-gray-200 font-bold mb-4">Parts</h2>
-        <div class="flex w-full">
+        <div
+          class="
+            rounded
+            shadow-md
+            bg-gray-700
+            w-full
+            py-2
+            px-2
+            space-y-2
+            max-h-72
+            flex flex-col
+          "
+        >
           <div
             class="
+              flex
               rounded
               shadow-md
-              bg-gray-700
               w-full
               py-2
-              px-2
-              space-y-2
-              flex flex-col
+              px-4
+              bg-gray-900
+              text-gray-100
             "
           >
-            <div class="">
-              <div
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-4 text-gray-800 self-center"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              class="bg-gray-900 w-full"
+              placeholder="Quick Search.."
+              v-model="partSearchTerms"
+            />
+          </div>
+          <div
+            v-if="this.parts.length > 0"
+            class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll"
+          >
+            <div
+              v-for="part in this.unselectedParts"
+              :key="part.getDataValue('partId')"
+              class="space-x-2 drag"
+              @click="this.switch(part, 1)"
+            >
+              <p
                 class="
-                  flex
-                  rounded
+                  bg-gray-700
+                  text-gray-200
+                  font-semibold
                   shadow-md
-                  w-full
-                  py-2
-                  px-4
-                  bg-gray-900
-                  text-gray-100
+                  px-2
+                  rounded
+                  transition-colors
+                  hover:text-white hover:bg-green-500
+                  select-none
                 "
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-4 text-gray-800 self-center"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                <input
-                  class="bg-gray-900 w-full"
-                  placeholder="Quick Search.."
-                  v-model="partSearchTerms"
-                  v-on:keydown.enter="search"
-                />
-              </div>
-            </div>
-            <div
-              v-if="this.parts.length > 0"
-              class="
-                bg-gray-900
-                p-4
-                rounded
-                space-y-4
-                overflow-y-scroll
-                flex-grow
-              "
-            >
-              <div
-                v-for="part in this.unselectedParts"
-                :key="part.getDataValue('partId')"
-                class="space-x-2 drag"
-                @click="this.switch(part, 1)"
-              >
-                <p
-                  class="
-                    bg-gray-700
-                    text-gray-200
-                    font-semibold
-                    shadow-md
-                    px-2
-                    rounded
-                    transition-colors
-                    hover:text-white hover:bg-green-500
-                    select-none
-                  "
-                >
-                  {{ student.getDataValue("name") }}
-                </p>
-              </div>
+                {{ part.getDataValue("name") }}
+              </p>
             </div>
           </div>
         </div>
