@@ -12,8 +12,6 @@ export async function createStudent(
   dateOfBirth: Date,
   notes: string | null
 ): Promise<Student> {
-  console.log(Student.sequelize);
-  console.log(firstName, lastName, dateOfBirth, notes);
   return Student.create({
     firstName,
     lastName,
@@ -21,6 +19,8 @@ export async function createStudent(
     notes,
   });
 }
+
+// export async function recordAttendance() {}
 
 export async function getAllStudents(): Promise<Student[]> {
   const students = await Student.findAll();

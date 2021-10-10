@@ -209,21 +209,10 @@ export default defineComponent({
       router
         .push({
           name: "SearchResults",
-          query: { terms: this.searchTerms },
+          query: { type: "student", terms: this.searchTerms },
         })
         .catch((e) => e.printStackTrace());
     },
-  },
-  mounted(): void {
-    Student.findAll()
-      .then((data) => {
-        this.students = data;
-      })
-      .then(() => {
-        this.students.forEach((data) =>
-          console.log(data.getDataValue("studentId"))
-        );
-      });
   },
 });
 </script>

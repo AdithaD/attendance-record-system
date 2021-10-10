@@ -1,8 +1,11 @@
 import { Sequelize } from "sequelize";
 import sqlite3 from "sqlite3";
 
-import { model as student } from "./students/student_model";
-import { model as part } from "./parts/part_model";
+import * as student from "./students/student_model";
+import * as part from "./parts/part_model";
+import * as topic from "./parts/topic_model";
+import * as test from "./parts/test_model";
+
 export const db = new Sequelize({
   dialectModule: sqlite3,
   dialect: "sqlite",
@@ -17,12 +20,18 @@ export async function initialise(): Promise<void> {
     console.error("Unable to connect to the database:", error);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  student(db);
-  part(db);
+  student.model(db);
+
+  part.model(db);
+  topic.model(db);
+  test.model(db);
+
+  test.relations();
+  topic.relations();
+  part.relations();
 
   await db.sync({ alter: true }).then(() => {
-    console.log("db initialized");
+    console.log("db initialized. priting all models");
     console.log(db.models);
   });
 }

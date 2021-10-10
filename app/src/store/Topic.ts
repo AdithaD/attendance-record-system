@@ -1,4 +1,4 @@
-export default class Topic {
+export default class TopicData {
   name: string;
   isOptional: boolean;
   parts: Array<{ name: string }>;

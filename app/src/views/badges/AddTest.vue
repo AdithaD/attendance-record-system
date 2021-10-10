@@ -50,7 +50,7 @@
             hover:scale-105
           "
           type="button"
-          @click="$router.go(-1)"
+          @click="cancel"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="space-y-4">
-      <TextField v-model="name" title="Name" />
+      <TextField v-model="testName" title="Test Name" />
       <div v-if="!showSchedule">
         <button
           @click="toggleSchedule"
@@ -159,8 +159,10 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { addTest } from "@/backend/parts/badge_service";
 import TextField from "@/components/TextField.vue";
 import DateField from "@/components/DateField.vue";
+import dayjs from "dayjs";
 
 @Options({
   components: {
@@ -169,16 +171,44 @@ import DateField from "@/components/DateField.vue";
   },
 })
 export default class AddTest extends Vue {
-  name = "";
-  schedule: Date | null = null;
+  testName = "";
+  schedule: string | null = null;
   showSchedule = false;
+  errors: Array<string> = [];
 
   toggleSchedule(): void {
     this.showSchedule = !this.showSchedule;
   }
 
-  validate(): boolean {
-    return false;
+  validDate(date: string): boolean {
+    return dayjs("19/07/2001", "DD/MM/YYYY", false).isValid();
+  }
+  validate(e: Event): boolean {
+    while (this.errors.length > 0) {
+      this.errors.pop();
+    }
+
+    if (this.schedule && !this.validDate(this.schedule)) {
+      this.errors.push("Date is not valid");
+    }
+
+    if (this.errors.length == 0) {
+      addTest(
+        this.testName,
+        dayjs(this.schedule, "DD/MM/YYYY").toDate(),
+        this.$store.state.topics
+      );
+      //this.$store.commit("clearTempTest");
+      return true;
+    } else {
+      console.log(this.errors);
+      return false;
+    }
+  }
+
+  cancel(): void {
+    this.$store.commit("clearTempTest");
+    this.$router.go(-1);
   }
 }
 </script>

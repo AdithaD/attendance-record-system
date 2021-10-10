@@ -332,7 +332,6 @@ export default class RecordAttendance extends Vue {
     return this.students
       .filter((student) => {
         const model = student.student;
-        console.log(`${firstName} , ${lastName}`);
         let hasFirstName = model
           .getDataValue("firstName")
           .toLowerCase()
@@ -384,7 +383,6 @@ export default class RecordAttendance extends Vue {
 
   // startDrag(evt: DragEvent, item: string): void {
   //   if (evt.dataTransfer) {
-  //     console.log("dragging");
   //     evt.dataTransfer.dropEffect = "move";
   //     evt.dataTransfer.effectAllowed = "move";
   //     evt.dataTransfer.setData("itemID", item);
@@ -404,18 +402,11 @@ export default class RecordAttendance extends Vue {
   // }
 
   switch(student: Student, dest: number): void {
-    console.log(student);
     const studentObj = this.students.find((s) => {
-      console.log(
-        `${0} == ${1}`,
-        s.student.getDataValue("studentId"),
-        student.getDataValue("studentId")
-      );
       return (
         s.student.getDataValue("studentId") == student.getDataValue("studentId")
       );
     });
-    console.log(studentObj);
     if (studentObj) studentObj.list = dest;
   }
 }

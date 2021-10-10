@@ -1,7 +1,9 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Topic } from "./topic_model";
 
 interface PartAttributes {
   partId: number;
+  topicId: number;
   name: string;
 }
 
@@ -16,6 +18,10 @@ export function model(sequelize: Sequelize): void {
         primaryKey: true,
         autoIncrement: true,
       },
+      topicId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       // Model attributes are defined here
       name: {
         type: DataTypes.STRING,
@@ -27,4 +33,10 @@ export function model(sequelize: Sequelize): void {
       modelName: "Part",
     }
   );
+}
+
+export function relations(): void {
+  Part.belongsTo(Topic, {
+    foreignKey: { name: "topicId" },
+  });
 }

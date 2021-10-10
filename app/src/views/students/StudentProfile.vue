@@ -113,7 +113,6 @@ export default class StudentProfile extends Vue {
     }).then((data) => {
       if (data) {
         this.student = data;
-        console.log("got student");
       }
     });
   }
@@ -122,11 +121,10 @@ export default class StudentProfile extends Vue {
       "DD/MM/YYYY"
     );
   }
-  edit(): void {
-    if (this.student) {
-      console.log("edit");
-    }
-  }
+  // edit(): void {
+  //   if (this.student) {
+  //   }
+  // }
   deleteStudent(): void {
     if (this.student) {
       this.student.destroy();

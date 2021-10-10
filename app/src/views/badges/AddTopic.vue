@@ -146,8 +146,6 @@ export default defineComponent({
       let hasParts = this.parts.length != 0;
       let hasName = this.name != "";
 
-      console.log(this.isOptional);
-
       const payload = new Topic(this.name, this.isOptional, this.parts);
 
       //if (hasParts && hasName) {}

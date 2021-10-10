@@ -1,8 +1,8 @@
 import { createStore } from "vuex";
-import Topic from "./Topic";
+import TopicData from "./Topic";
 
 interface State {
-  topics: Array<Topic>;
+  topics: Array<TopicData>;
 }
 
 export const store = createStore<State>({
@@ -10,11 +10,10 @@ export const store = createStore<State>({
     topics: [],
   },
   mutations: {
-    addTopic(state, topic: Topic) {
+    addTopic(state, topic: TopicData) {
       state.topics.push(topic);
-      console.log(`added`, topic);
     },
-    deleteTopic(state, topic: Topic) {
+    deleteTopic(state, topic: TopicData) {
       state.topics.splice(state.topics.indexOf(topic), 1);
     },
     clearTempTest(state) {

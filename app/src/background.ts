@@ -21,7 +21,7 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
     },
-    resizable: false,
+    resizable: true,
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -64,7 +64,6 @@ app.on("ready", async () => {
       }
     }
   }
-  console.log("starting");
   createWindow();
 });
 

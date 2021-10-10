@@ -115,11 +115,11 @@ export default defineComponent({
   methods: {
     validDate: function (date: string): boolean {
       console.log(date);
-      return dayjs("19/07/2001", "DD/MM/YYYY", false).isValid();
+      return dayjs(date, "DD/MM/YYYY", false).isValid();
     },
     validate: function (e: Event): boolean {
       while (this.errors.length > 0) {
-        console.log(this.errors.pop());
+        this.errors.pop();
       }
       if (this.fname == "") {
         console.log(this.fname);

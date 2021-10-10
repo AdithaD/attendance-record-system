@@ -46,6 +46,4 @@ export function model(sequelize: Sequelize): void {
       modelName: "Student",
     }
   );
-  console.log(Student.sequelize);
-  console.log(Student === sequelize.models.Student);
 }
