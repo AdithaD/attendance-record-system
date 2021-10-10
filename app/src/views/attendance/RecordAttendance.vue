@@ -61,7 +61,7 @@
               v-for="student in this.unselectedStudents"
               :key="student.getDataValue('studentId')"
               class="space-x-2 drag"
-              @click="this.switch(student, 1)"
+              @click="this.switchStudent(student, 1)"
             >
               <p
                 class="
@@ -138,7 +138,7 @@
               v-for="part in this.unselectedParts"
               :key="part.getDataValue('partId')"
               class="space-x-2 drag"
-              @click="this.switch(part, 1)"
+              @click="this.switchPart(part, 1)"
             >
               <p
                 class="
@@ -192,7 +192,7 @@
             v-for="student in this.selectedStudents"
             :key="student.getDataValue('studentId')"
             class="space-x-2 drag"
-            @click="this.switch(student, 0)"
+            @click="this.switchStudent(student, 0)"
           >
             <p
               class="
@@ -231,7 +231,7 @@
             v-for="part in this.selectedParts"
             :key="part.getDataValue('partId')"
             class="space-x-2 drag"
-            @click="this.switch(student, 0)"
+            @click="this.switchPart(part, 0)"
           >
             <p
               class="
@@ -246,7 +246,7 @@
                 select-none
               "
             >
-              {{ student.getDataValue("name") }}
+              {{ part.getDataValue("name") }}
             </p>
           </div>
         </div>
@@ -302,6 +302,7 @@ export default class RecordAttendance extends Vue {
       });
     });
     Part.findAll().then((data) => {
+      console.log(data);
       data.forEach((part) => {
         this.parts.push({ part, list: 0 });
       });
@@ -363,7 +364,7 @@ export default class RecordAttendance extends Vue {
     return this.parts
       .filter((part) => {
         const model = part.part;
-        let included = model.getDataValue("name") == searchTerms;
+        let included = model.getDataValue("name").includes(searchTerms);
         return part.list == 0 && included;
       })
       .map((part) => {
@@ -381,33 +382,20 @@ export default class RecordAttendance extends Vue {
       });
   }
 
-  // startDrag(evt: DragEvent, item: string): void {
-  //   if (evt.dataTransfer) {
-  //     evt.dataTransfer.dropEffect = "move";
-  //     evt.dataTransfer.effectAllowed = "move";
-  //     evt.dataTransfer.setData("itemID", item);
-  //   }
-  // }
-
-  // onDrop(evt: DragEvent, list: number): void {
-  //   if (evt.dataTransfer) {
-  //     const itemID = evt.dataTransfer.getData("itemID");
-  //     const item = this.students.find(
-  //       (student) =>
-  //         student.student.getDataValue("studentId").toString() == itemID
-  //     );
-
-  //     if (item) item.list = list;
-  //   }
-  // }
-
-  switch(student: Student, dest: number): void {
+  switchStudent(student: Student, dest: number): void {
     const studentObj = this.students.find((s) => {
       return (
         s.student.getDataValue("studentId") == student.getDataValue("studentId")
       );
     });
     if (studentObj) studentObj.list = dest;
+  }
+
+  switchPart(part: Part, dest: number): void {
+    const partObj = this.parts.find((s) => {
+      return s.part.getDataValue("partId") == part.getDataValue("partId");
+    });
+    if (partObj) partObj.list = dest;
   }
 }
 </script>

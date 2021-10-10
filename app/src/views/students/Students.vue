@@ -133,11 +133,13 @@
       </div>
     </div>
 
-    <div class="rounded shadow-md bg-gray-700 py-2 px-4 h-3/5 flex flex-col">
+    <div
+      class="rounded shadow-md bg-gray-700 pt-2 pb-4 px-4 h-3/5 flex flex-col"
+    >
       <h2 class="text-2xl text-gray-200 font-bold mb-4">Top Students</h2>
       <div
         v-if="this.students.length > 0"
-        class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll max-h-full"
+        class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll flex-grow"
       >
         <div
           @click="openProfile(student)"
