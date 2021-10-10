@@ -1,12 +1,10 @@
 import {
   Sequelize,
   Model,
-  ModelDefined,
   DataTypes,
   HasManyGetAssociationsMixin,
   HasManyAddAssociationMixin,
   HasManyHasAssociationMixin,
-  Association,
   HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
   Optional,
@@ -36,7 +34,7 @@ export function model(sequelize: Sequelize): void {
         primaryKey: true,
         autoIncrement: true,
       },
-      
+
       // Model attributes are defined here
       name: {
         type: DataTypes.STRING,

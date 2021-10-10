@@ -197,6 +197,9 @@ export default defineComponent({
       searchTerms: "",
     };
   },
+  async mounted() {
+    this.students = await Student.findAll({});
+  },
   methods: {
     toggle(): void {
       this.isSearchOptionsOpen = !this.isSearchOptionsOpen;

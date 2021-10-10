@@ -171,10 +171,27 @@ import dayjs from "dayjs";
   },
 })
 export default class AddTest extends Vue {
-  testName = "";
-  schedule: string | null = null;
   showSchedule = false;
   errors: Array<string> = [];
+
+  mounted() {
+    this.showSchedule = this.$store.state.testName != null;
+  }
+
+  get testName(): string {
+    return this.$store.state.testName;
+  }
+  set testName(value) {
+    this.$store.commit("updateTestName", value);
+  }
+
+  get schedule(): Date | null {
+    return this.$store.state.testDate;
+  }
+
+  set schedule(value) {
+    this.$store.commit("updateTestDate", value);
+  }
 
   toggleSchedule(): void {
     this.showSchedule = !this.showSchedule;
@@ -183,22 +200,24 @@ export default class AddTest extends Vue {
   validDate(date: string): boolean {
     return dayjs("19/07/2001", "DD/MM/YYYY", false).isValid();
   }
-  validate(e: Event): boolean {
+  async validate(e: Event): Promise<boolean> {
     while (this.errors.length > 0) {
       this.errors.pop();
     }
 
-    if (this.schedule && !this.validDate(this.schedule)) {
+    if (this.schedule && !this.validDate(this.$store.state.schedule)) {
       this.errors.push("Date is not valid");
     }
 
     if (this.errors.length == 0) {
-      addTest(
-        this.testName,
-        dayjs(this.schedule, "DD/MM/YYYY").toDate(),
-        this.$store.state.topics
-      );
-      //this.$store.commit("clearTempTest");
+      console.log(this.schedule);
+
+      let date = this.schedule
+        ? dayjs(this.schedule, "DD/MM/YYYY").toDate()
+        : null;
+      await addTest(this.$store.state.testName, date, this.$store.state.topics);
+      this.$store.commit("clearTempTest");
+      this.$router.back();
       return true;
     } else {
       console.log(this.errors);

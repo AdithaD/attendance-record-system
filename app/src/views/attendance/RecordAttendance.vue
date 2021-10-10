@@ -270,6 +270,7 @@
           hover:scale-105 hover:bg-blue-500
         "
         type="button"
+        @click="record"
       >
         Submit
       </button>
@@ -396,6 +397,13 @@ export default class RecordAttendance extends Vue {
       return s.part.getDataValue("partId") == part.getDataValue("partId");
     });
     if (partObj) partObj.list = dest;
+  }
+
+  record() {
+    let parts = this.unselectedParts;
+    let students = this.unselectedStudents;
+
+    // Attendance
   }
 }
 </script>
