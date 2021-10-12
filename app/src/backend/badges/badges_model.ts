@@ -8,7 +8,7 @@ interface BadgeAttributes {
 }
 
 type BadgeCreationAttributes = Optional<BadgeAttributes, "badgeId">;
-export class Student extends Model<
+export class Badge extends Model<
   BadgeAttributes,
   BadgeCreationAttributes
 > {}
