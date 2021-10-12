@@ -124,7 +124,7 @@
 </template>
 
 <script lang="ts">
-import { Test } from "@/backend/parts/test_model";
+import { Test } from "@/backend/badges/test_model";
 import dayjs from "dayjs";
 import { Op } from "sequelize";
 import { defineComponent, onMounted, ref } from "vue";

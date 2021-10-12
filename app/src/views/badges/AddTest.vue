@@ -159,7 +159,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { addTest } from "@/backend/parts/badge_service";
+import { addTest } from "@/backend/badges/badge_service";
 import TextField from "@/components/TextField.vue";
 import DateField from "@/components/DateField.vue";
 import dayjs from "dayjs";
@@ -174,22 +174,22 @@ export default class AddTest extends Vue {
   showSchedule = false;
   errors: Array<string> = [];
 
-  mounted() {
+  mounted(): void {
     this.showSchedule = this.$store.state.testName != null;
   }
 
   get testName(): string {
     return this.$store.state.testName;
   }
-  set testName(value) {
+  set testName(value: string) {
     this.$store.commit("updateTestName", value);
   }
 
-  get schedule(): Date | null {
+  get schedule(): string {
     return this.$store.state.testDate;
   }
 
-  set schedule(value) {
+  set schedule(value: string) {
     this.$store.commit("updateTestDate", value);
   }
 
@@ -198,9 +198,9 @@ export default class AddTest extends Vue {
   }
 
   validDate(date: string): boolean {
-    return dayjs("19/07/2001", "DD/MM/YYYY", false).isValid();
+    return dayjs(date, "DD/MM/YYYY", false).isValid();
   }
-  async validate(e: Event): Promise<boolean> {
+  async validate(): Promise<boolean> {
     while (this.errors.length > 0) {
       this.errors.pop();
     }

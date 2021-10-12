@@ -40,7 +40,7 @@
 <script lang="ts">
 import { defineComponent, onMounted } from "@vue/runtime-core";
 import { ref } from "vue";
-import { Test } from "@/backend/parts/test_model";
+import { Test } from "@/backend/badges/test_model";
 import sequelize from "sequelize";
 export default defineComponent({
   props: {

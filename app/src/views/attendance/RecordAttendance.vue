@@ -282,7 +282,7 @@
 import { Options, Vue } from "vue-class-component";
 import DateField from "@/components/DateField.vue";
 import { Student } from "@/backend/students/student_model";
-import { Part } from "@/backend/parts/part_model";
+import { Part } from "@/backend/badges/part_model";
 
 @Options({
   components: {
@@ -399,10 +399,9 @@ export default class RecordAttendance extends Vue {
     if (partObj) partObj.list = dest;
   }
 
-  record() {
-    let parts = this.unselectedParts;
-    let students = this.unselectedStudents;
-
+  record(): void {
+    // let parts = this.unselectedParts;
+    // let students = this.unselectedStudents;
     // Attendance
   }
 }

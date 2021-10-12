@@ -1,14 +1,4 @@
-import {
-  DataTypes,
-  HasManyAddAssociationMixin,
-  HasManyCountAssociationsMixin,
-  HasManyCreateAssociationMixin,
-  HasManyGetAssociationsMixin,
-  HasManyHasAssociationMixin,
-  Model,
-  Optional,
-  Sequelize,
-} from "sequelize";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Part } from "./part_model";
 import { Test } from "./test_model";
 

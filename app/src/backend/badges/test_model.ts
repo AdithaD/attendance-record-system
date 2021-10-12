@@ -1,14 +1,4 @@
-import {
-  Sequelize,
-  Model,
-  DataTypes,
-  HasManyGetAssociationsMixin,
-  HasManyAddAssociationMixin,
-  HasManyHasAssociationMixin,
-  HasManyCountAssociationsMixin,
-  HasManyCreateAssociationMixin,
-  Optional,
-} from "sequelize";
+import { Sequelize, Model, DataTypes, Optional } from "sequelize";
 import { Topic } from "./topic_model";
 
 interface TestAttributes {
@@ -18,13 +8,7 @@ interface TestAttributes {
 }
 
 type TestCreationAttributes = Optional<TestAttributes, "testId" | "date">;
-export class Test extends Model<TestAttributes, TestCreationAttributes> {
-  public getTopics!: HasManyGetAssociationsMixin<Topic>; // Note the null assertions!
-  public addTopic!: HasManyAddAssociationMixin<Topic, number>;
-  public hasTopic!: HasManyHasAssociationMixin<Topic, number>;
-  public countTopics!: HasManyCountAssociationsMixin;
-  public createTopic!: HasManyCreateAssociationMixin<Topic>;
-}
+export class Test extends Model<TestAttributes, TestCreationAttributes> {}
 
 export function model(sequelize: Sequelize): void {
   Test.init(
