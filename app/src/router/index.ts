@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
-import Badges from "../views/Badges.vue";
+import Badges from "../views/badges/Badges.vue";
+import AddBadge from "../views/badges/AddBadge.vue";
 import Students from "../views/students/Students.vue";
 import Tests from "../views/Tests.vue";
 import AddStudent from "../views/students/AddStudent.vue";
@@ -20,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/Badges",
     name: "Badges",
     component: Badges,
+  },
+  {
+    path: "/Badges/AddBadge",
+    name: "AddBadge",
+    component: AddBadge,
   },
   {
     path: "/Students",

@@ -16,7 +16,6 @@ export async function addTest(
     topics.forEach(async (topic) => {
       const newTopic = await Topic.create({
         name: topic.name,
-        optional: topic.isOptional,
         testId: testId,
       });
       const topicId = newTopic.get("topicId") as number;

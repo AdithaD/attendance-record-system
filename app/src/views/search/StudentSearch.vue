@@ -44,7 +44,7 @@ import { Student } from "@/backend/students/student_model";
 import { defineComponent, onMounted } from "@vue/runtime-core";
 import { Op } from "sequelize";
 import sequelize from "sequelize";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 export default defineComponent({
   props: {
     terms: { type: String, required: true },

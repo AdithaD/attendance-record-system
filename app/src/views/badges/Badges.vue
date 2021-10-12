@@ -18,6 +18,7 @@
           hover:scale-105
         "
         type="button"
+        @click="$router.push({ name: 'AddBadge' })"
       >
         Add Badge
       </button>

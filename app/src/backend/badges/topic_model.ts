@@ -6,7 +6,6 @@ interface TopicAttributes {
   topicId: number;
   testId: number;
   name: string;
-  optional: boolean;
 }
 
 type TopicCreationAttributes = Optional<TopicAttributes, "topicId">;
@@ -28,11 +27,6 @@ export function model(sequelize: Sequelize): void {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      optional: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
       },
     },
     {

@@ -71,15 +71,6 @@
     </div>
     <div class="space-y-6">
       <TextField v-model="name" title="Name" />
-      <div class="flex self-center space-x-4">
-        <h3 class="text-gray-300 font-bold">Optional?</h3>
-        <input
-          class="self-center h-6 w-6"
-          type="checkbox"
-          id="checkbox"
-          v-model="isOptional"
-        />
-      </div>
     </div>
     <div class="space-y-4 text-gray-200 border-t-4 border-gray-700 pt-6">
       <div class="flex justify-between items-stretch">

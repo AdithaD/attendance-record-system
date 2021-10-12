@@ -2,9 +2,9 @@ import { Sequelize } from "sequelize";
 import sqlite3 from "sqlite3";
 
 import * as student from "./students/student_model";
-import * as part from "./badges/part_model";
-import * as topic from "./badges/topic_model";
-import * as test from "./badges/test_model";
+import * as part from "@/backend/badges/part_model";
+import * as topic from "@/backend/badges/topic_model";
+import * as test from "@/backend/badges/test_model";
 
 export const db = new Sequelize({
   dialectModule: sqlite3,
@@ -30,7 +30,7 @@ export async function initialise(): Promise<void> {
   topic.relations();
   part.relations();
 
-  await db.sync().then(() => {
+  await db.sync({ alter: true }).then(() => {
     console.log("db initialized. priting all models");
     console.log(db.models);
   });
