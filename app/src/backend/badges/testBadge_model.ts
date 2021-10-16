@@ -1,6 +1,4 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
-import { Test } from "./test_model";
-import { Topic } from "./topic_model";
 
 interface testBadgeAttributes {
   testBadgeId: number;
