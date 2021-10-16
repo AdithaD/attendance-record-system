@@ -190,6 +190,7 @@ export default class AddTest extends Vue {
   }
 
   set schedule(value: string) {
+    console.log("updating");
     this.$store.commit("updateTestDate", value);
   }
 
@@ -198,6 +199,7 @@ export default class AddTest extends Vue {
   }
 
   validDate(date: string): boolean {
+    console.log(date);
     return dayjs(date, "DD/MM/YYYY", false).isValid();
   }
   async validate(): Promise<boolean> {
@@ -205,7 +207,7 @@ export default class AddTest extends Vue {
       this.errors.pop();
     }
 
-    if (this.schedule && !this.validDate(this.$store.state.schedule)) {
+    if (this.schedule && !this.validDate(this.schedule)) {
       this.errors.push("Date is not valid");
     }
 

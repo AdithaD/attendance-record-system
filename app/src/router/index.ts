@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
-import Badges from "../views/Badges.vue";
+import Badges from "../views/badges/Badges.vue";
+import AddBadge from "../views/badges/AddBadge.vue";
 import Students from "../views/students/Students.vue";
 import Tests from "../views/Tests.vue";
 import AddStudent from "../views/students/AddStudent.vue";
@@ -9,6 +10,7 @@ import SearchResults from "../views/students/SearchResults.vue";
 import RecordAttendance from "../views/attendance/RecordAttendance.vue";
 import AddTopic from "../views/badges/AddTopic.vue";
 import AddTest from "../views/badges/AddTest.vue";
+import ViewTest from "../views/badges/ViewTest.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/Badges",
     name: "Badges",
     component: Badges,
+  },
+  {
+    path: "/Badges/AddBadge",
+    name: "AddBadge",
+    component: AddBadge,
   },
   {
     path: "/Students",
@@ -60,6 +67,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/Test/AddTest",
     name: "AddTest",
     component: AddTest,
+  },
+  {
+    path: "/Test/:id",
+    name: "ViewTest",
+    component: ViewTest,
   },
 ];
 

@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Topic } from "./topic_model";
+import { Student } from "../students/student_model";
 
 interface PartAttributes {
   partId: number;
@@ -39,4 +40,8 @@ export function relations(): void {
   Part.belongsTo(Topic, {
     foreignKey: { name: "topicId" },
   });
+}
+
+export function relation(): void {
+  Part.belongsToMany(Student, { through: "studentParts" });
 }

@@ -1,6 +1,7 @@
 import TopicData from "@/store/Topic";
 import { Part } from "./part_model";
 import { Test } from "./test_model";
+import { TestSchedule } from "./test_schedule_model";
 import { Topic } from "./topic_model";
 
 export async function addTest(
@@ -9,14 +10,13 @@ export async function addTest(
   topics: Array<TopicData>
 ): Promise<void> {
   console.log("adding test");
-  await Test.create({ name, date: schedule }).then((newTest) => {
+  await Test.create({ name }).then((newTest) => {
     const testId: number = newTest.get("testId") as number;
     console.log(topics);
 
     topics.forEach(async (topic) => {
       const newTopic = await Topic.create({
         name: topic.name,
-        optional: topic.isOptional,
         testId: testId,
       });
       const topicId = newTopic.get("topicId") as number;
@@ -28,5 +28,49 @@ export async function addTest(
         });
       });
     });
+
+    if (schedule)
+      TestSchedule.create({ testId, date: schedule, completed: false });
   });
+}
+
+// export enum Type {
+//   A,
+//   S,
+//   C,
+// }
+
+// export enum Tier {
+//   Diamond,
+//   Platnium,
+//   Lithium,
+// }
+
+// export function addBadge(
+//   name: String,
+//   type: Type,
+//   tier: Tier,
+//   mandatoryTests: Test[],
+//   optionalTests: Test[]
+// ) {}
+export class StudentBadgeCount {
+  public studentId: number;
+  public diamond: number;
+  public platinum: number;
+  public lithium: number;
+
+  constructor(
+    studentId: number,
+    diamond: number,
+    platinum: number,
+    lithium: number
+  ) {
+    this.studentId = studentId;
+    this.diamond = diamond;
+    this.platinum = platinum;
+    this.lithium = lithium;
+  }
+  public getValue(): number {
+    return 0;
+  }
 }
