@@ -3,6 +3,7 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 interface BadgeAttributes {
   badgeId: number;
   badgeName: string;
+  badgeTier: string;
   dateEarned: Date;
   notes: string | null;
 }
@@ -25,6 +26,10 @@ export function model(sequelize: Sequelize): void {
       badgeName: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      badgeTier: {
+        type: DataTypes.STRING,
+        allowNull: false
       },
       dateEarned: {
         type: DataTypes.DATE,
