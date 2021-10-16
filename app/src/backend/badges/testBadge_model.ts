@@ -4,7 +4,7 @@ import { Topic } from "./topic_model";
 
 interface testBadgeAttributes {
     testBadgeId: number;
-    topicId: number;
+    badgeId: number;
     testId: number;
     name: string;
     isOptional: boolean;
@@ -21,7 +21,7 @@ export function model(sequelize: Sequelize): void {
              primaryKey: true,
                 autoIncrement: true,
             },
-            topicId: {
+            badgeId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
