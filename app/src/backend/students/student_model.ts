@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Badge } from "../badges/badge_model";
 import { Part } from "../badges/part_model";
+import { StudentBadge } from "../students/studentBadge_model";
 
 interface StudentAttributes {
   studentId: number;
@@ -51,4 +53,5 @@ export function model(sequelize: Sequelize): void {
 
 export function relation(): void {
   Student.belongsToMany(Part, { through: "studentParts" });
+  Student.belongsToMany(Badge, { through: StudentBadge });
 }
