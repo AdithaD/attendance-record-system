@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Test } from "./test_model";
 
 interface BadgeAttributes {
   badgeId: number;
@@ -47,4 +48,8 @@ export function model(sequelize: Sequelize): void {
   );
   console.log(Badge.sequelize);
   console.log(Badge === sequelize.models.Badge);
+}
+
+export function relation(): void {
+  Badge.belongsToMany(Test, {through: "testBadge"});
 }
