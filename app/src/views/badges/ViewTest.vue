@@ -103,7 +103,7 @@
 import { Part } from "@/backend/badges/part_model";
 import { Test } from "@/backend/badges/test_model";
 import { Topic } from "@/backend/badges/topic_model";
-import { computed, ComputedRef, defineComponent, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
 import { TestSchedule } from "@/backend/badges/test_schedule_model";

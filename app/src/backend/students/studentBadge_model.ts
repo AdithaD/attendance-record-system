@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 import { Badge } from "../badges/badge_model";
 import { Student } from "../students/student_model";
 
