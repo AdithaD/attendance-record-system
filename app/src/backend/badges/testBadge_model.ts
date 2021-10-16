@@ -45,11 +45,3 @@ export function model(sequelize: Sequelize): void {
         }
     );
 }
-
-export function relations(): void {
-    testBadge.hasMany(Test, {
-        foreignKey: {name: "testBadgeId"},
-        constraints: false,
-    });
-    testBadge.belongsTo(Test, {foreignKey: { name: "testID"}});
-}
