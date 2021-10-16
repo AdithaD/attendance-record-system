@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Test } from "./test_model";
+import { Student } from "../students/student_model";
+import { StudentBadge } from "../students/studentBadge_model";
 
 interface BadgeAttributes {
   badgeId: number;
@@ -10,10 +12,7 @@ interface BadgeAttributes {
 }
 
 type BadgeCreationAttributes = Optional<BadgeAttributes, "badgeId">;
-export class Badge extends Model<
-  BadgeAttributes,
-  BadgeCreationAttributes
-> {}
+export class Badge extends Model<BadgeAttributes, BadgeCreationAttributes> {}
 
 export function model(sequelize: Sequelize): void {
   Badge.init(
@@ -30,7 +29,7 @@ export function model(sequelize: Sequelize): void {
       },
       badgeTier: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       dateEarned: {
         type: DataTypes.DATE,
@@ -51,5 +50,6 @@ export function model(sequelize: Sequelize): void {
 }
 
 export function relation(): void {
-  Badge.belongsToMany(Test, {through: "testBadge"});
+  Badge.belongsToMany(Test, { through: "testBadge" });
+  Badge.belongsToMany(Student, { through: StudentBadge });
 }
