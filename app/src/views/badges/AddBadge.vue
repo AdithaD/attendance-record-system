@@ -320,6 +320,8 @@ export default class AddTopic extends Vue {
       this.errors.push("There must be 11 optional tests");
     }
 
+    //addBadge()
+
     return this.errors.length > 0;
   }
 }

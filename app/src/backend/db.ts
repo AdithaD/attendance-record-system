@@ -5,6 +5,7 @@ import * as student from "./students/student_model";
 import * as part from "@/backend/badges/part_model";
 import * as topic from "@/backend/badges/topic_model";
 import * as test from "@/backend/badges/test_model";
+import * as test_schedule from "@/backend/badges/test_schedule_model";
 
 export const db = new Sequelize({
   dialectModule: sqlite3,
@@ -25,12 +26,14 @@ export async function initialise(): Promise<void> {
   part.model(db);
   topic.model(db);
   test.model(db);
+  test_schedule.model(db);
 
   test.relations();
   topic.relations();
   part.relations();
+  test_schedule.relations();
 
-  await db.sync({ alter: true }).then(() => {
+  await db.sync().then(() => {
     console.log("db initialized. priting all models");
     console.log(db.models);
   });

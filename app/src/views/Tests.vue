@@ -83,9 +83,15 @@
       </div>
       <div class="bg-gray-900 p-4 space-y-4">
         <div
-          v-for="test in this.schedule"
-          :key="test.get('testId')"
+          v-for="schedule in this.schedule"
+          :key="schedule.Test.get('testId')"
           class="flex space-x-2"
+          @click="
+            router.push({
+              name: 'ViewTest',
+              params: { id: schedule.Test.get('testId') },
+            })
+          "
         >
           <p
             class="
@@ -99,7 +105,7 @@
               text-center
             "
           >
-            {{ getDate(test.get("date")) }}
+            {{ getDate(schedule.Test.get("date")) }}
           </p>
           <p
             class="
@@ -115,7 +121,7 @@
               flex-grow
             "
           >
-            {{ test.name }}
+            {{ schedule.Test.name }}
           </p>
         </div>
       </div>
@@ -125,6 +131,7 @@
 
 <script lang="ts">
 import { Test } from "@/backend/badges/test_model";
+import { TestSchedule } from "@/backend/badges/test_schedule_model";
 import dayjs from "dayjs";
 import { Op } from "sequelize";
 import { defineComponent, onMounted, ref } from "vue";
@@ -135,7 +142,7 @@ export default defineComponent({
     const router = useRouter();
     const searchTerms = ref("");
 
-    const schedule = ref([] as Test[]);
+    const schedule = ref([] as TestSchedule[]);
 
     function search() {
       router
@@ -151,12 +158,13 @@ export default defineComponent({
     }
 
     onMounted(async function () {
-      schedule.value = await Test.findAll({
+      schedule.value = await TestSchedule.findAll({
         where: {
           date: {
             [Op.not]: null,
           },
         },
+        include: Test,
         order: ["date"],
       });
     });
@@ -166,6 +174,7 @@ export default defineComponent({
       search,
       schedule,
       getDate,
+      router,
     };
   },
 });

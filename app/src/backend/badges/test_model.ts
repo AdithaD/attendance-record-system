@@ -1,13 +1,13 @@
 import { Sequelize, Model, DataTypes, Optional } from "sequelize";
+import { TestSchedule } from "./test_schedule_model";
 import { Topic } from "./topic_model";
 
 interface TestAttributes {
   testId: number;
   name: string;
-  date: Date | null;
 }
 
-type TestCreationAttributes = Optional<TestAttributes, "testId" | "date">;
+type TestCreationAttributes = Optional<TestAttributes, "testId">;
 export class Test extends Model<TestAttributes, TestCreationAttributes> {}
 
 export function model(sequelize: Sequelize): void {
@@ -24,10 +24,6 @@ export function model(sequelize: Sequelize): void {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
     },
     {
       sequelize,
@@ -40,5 +36,9 @@ export function relations(): void {
   Test.hasMany(Topic, {
     foreignKey: { name: "testId" },
     constraints: false,
+  });
+
+  Test.hasMany(TestSchedule, {
+    foreignKey: { name: "testId" },
   });
 }

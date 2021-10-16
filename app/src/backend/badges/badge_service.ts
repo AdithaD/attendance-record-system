@@ -1,6 +1,7 @@
 import TopicData from "@/store/Topic";
 import { Part } from "./part_model";
 import { Test } from "./test_model";
+import { TestSchedule } from "./test_schedule_model";
 import { Topic } from "./topic_model";
 
 export async function addTest(
@@ -9,7 +10,7 @@ export async function addTest(
   topics: Array<TopicData>
 ): Promise<void> {
   console.log("adding test");
-  await Test.create({ name, date: schedule }).then((newTest) => {
+  await Test.create({ name }).then((newTest) => {
     const testId: number = newTest.get("testId") as number;
     console.log(topics);
 
@@ -27,5 +28,28 @@ export async function addTest(
         });
       });
     });
+
+    if (schedule)
+      TestSchedule.create({ testId, date: schedule, completed: false });
   });
 }
+
+// export enum Type {
+//   A,
+//   S,
+//   C,
+// }
+
+// export enum Tier {
+//   Diamond,
+//   Platnium,
+//   Lithium,
+// }
+
+// export function addBadge(
+//   name: String,
+//   type: Type,
+//   tier: Tier,
+//   mandatoryTests: Test[],
+//   optionalTests: Test[]
+// ) {}
