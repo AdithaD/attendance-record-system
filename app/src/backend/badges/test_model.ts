@@ -1,5 +1,6 @@
 import { Sequelize, Model, DataTypes, Optional } from "sequelize";
 import { TestSchedule } from "./test_schedule_model";
+import { Badge } from "./badge_model";
 import { Topic } from "./topic_model";
 
 interface TestAttributes {
@@ -41,4 +42,8 @@ export function relations(): void {
   Test.hasMany(TestSchedule, {
     foreignKey: { name: "testId" },
   });
+}
+
+export function relation(): void {
+  Test.belongsToMany(Badge, { through: "testBadge" });
 }
