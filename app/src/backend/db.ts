@@ -30,7 +30,7 @@ export async function initialise(): Promise<void> {
   topic.relations();
   part.relations();
 
-  await db.sync({alter: true}).then(() => {
+  await db.sync({ alter: true }).then(() => {
     console.log("db initialized. priting all models");
     console.log(db.models);
   });

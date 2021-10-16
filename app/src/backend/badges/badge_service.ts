@@ -31,20 +31,24 @@ export async function addTest(
   });
 }
 
-export class StudentBadgeCount{
+export class StudentBadgeCount {
   public studentId: number;
   public diamond: number;
   public platinum: number;
   public lithium: number;
 
-  constructor (studentId: number, diamond: number, platinum: number, lithium: number){
+  constructor(
+    studentId: number,
+    diamond: number,
+    platinum: number,
+    lithium: number
+  ) {
     this.studentId = studentId;
     this.diamond = diamond;
     this.platinum = platinum;
     this.lithium = lithium;
   }
-  public getValue(): number{
+  public getValue(): number {
     return 0;
   }
 }
-

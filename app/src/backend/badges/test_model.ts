@@ -45,5 +45,5 @@ export function relations(): void {
 }
 
 export function relation(): void {
-  Test.belongsToMany(Badge, { through: "testBadge"});
+  Test.belongsToMany(Badge, { through: "testBadge" });
 }

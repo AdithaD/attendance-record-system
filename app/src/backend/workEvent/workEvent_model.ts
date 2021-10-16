@@ -1,9 +1,9 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
 interface workEventAttributes {
-    workEventId: number;
-    date: Date;
-    type: String;
+  workEventId: number;
+  date: Date;
+  type: String;
 }
 
 type workEventCreationAttributes = Optional<workEventAttributes, "workEventId">;
@@ -20,7 +20,7 @@ export function model(sequelize: Sequelize): void {
         primaryKey: true,
         autoIncrement: false,
       },
-        date: {
+      date: {
         type: DataTypes.DATE,
         allowNull: false,
       },

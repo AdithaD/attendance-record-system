@@ -10,10 +10,7 @@ interface BadgeAttributes {
 }
 
 type BadgeCreationAttributes = Optional<BadgeAttributes, "badgeId">;
-export class Badge extends Model<
-  BadgeAttributes,
-  BadgeCreationAttributes
-> {}
+export class Badge extends Model<BadgeAttributes, BadgeCreationAttributes> {}
 
 export function model(sequelize: Sequelize): void {
   Badge.init(
@@ -30,7 +27,7 @@ export function model(sequelize: Sequelize): void {
       },
       badgeTier: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       dateEarned: {
         type: DataTypes.DATE,
@@ -51,5 +48,5 @@ export function model(sequelize: Sequelize): void {
 }
 
 export function relation(): void {
-  Badge.belongsToMany(Test, {through: "testBadge"});
+  Badge.belongsToMany(Test, { through: "testBadge" });
 }

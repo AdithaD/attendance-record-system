@@ -50,5 +50,5 @@ export function model(sequelize: Sequelize): void {
 }
 
 export function relation(): void {
-  Student.belongsToMany(Part, {through: "studentParts"});
+  Student.belongsToMany(Part, { through: "studentParts" });
 }
