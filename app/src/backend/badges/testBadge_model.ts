@@ -1,38 +1,35 @@
-import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
+import { Badge } from "./badge_model";
+import { Test } from "./test_model";
 
-interface testBadgeAttributes {
-  testBadgeId: number;
+interface TestBadgeAttributes {
   badgeId: number;
   testId: number;
-  name: string;
   isOptional: boolean;
 }
 
-type testBadgeCreationAttributes = Optional<testBadgeAttributes, "testBadgeId">;
-export class testBadge extends Model<
-  testBadgeAttributes,
-  testBadgeCreationAttributes
-> {}
+export class TestBadge extends Model<TestBadgeAttributes> {}
 
 export function model(sequelize: Sequelize): void {
-  testBadge.init(
+  TestBadge.init(
     {
-      testBadgeId: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
       badgeId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        primaryKey: true,
+        references: {
+          model: Badge,
+          key: "badgeId",
+        },
       },
       testId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        primaryKey: true,
+        references: {
+          model: Test,
+          key: "testId",
+        },
       },
       isOptional: {
         type: DataTypes.BOOLEAN,
@@ -42,7 +39,7 @@ export function model(sequelize: Sequelize): void {
     },
     {
       sequelize,
-      modelName: "testBadge",
+      modelName: "TestBadge",
     }
   );
 }

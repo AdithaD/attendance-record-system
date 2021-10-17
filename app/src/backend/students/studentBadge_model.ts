@@ -5,7 +5,6 @@ import { Student } from "../students/student_model";
 interface StudentBadgeAttributes {
   badgeId: number;
   studentId: number;
-  completionDate: Date;
 }
 
 export class StudentBadge extends Model<StudentBadgeAttributes> {}
@@ -29,10 +28,6 @@ export function model(sequelize: Sequelize): void {
           key: "studentId",
         },
         primaryKey: true,
-      },
-      completionDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
       },
     },
     {

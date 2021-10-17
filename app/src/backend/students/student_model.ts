@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Badge } from "../badges/badge_model";
 import { Part } from "../badges/part_model";
 import { StudentBadge } from "../students/studentBadge_model";
+import { StudentParts } from "./studentParts_model";
 
 interface StudentAttributes {
   studentId: number;
@@ -51,7 +52,13 @@ export function model(sequelize: Sequelize): void {
   );
 }
 
-export function relation(): void {
-  Student.belongsToMany(Part, { through: "studentParts" });
-  Student.belongsToMany(Badge, { through: StudentBadge });
+export function relations(): void {
+  Student.belongsToMany(Part, {
+    through: StudentParts,
+    foreignKey: "studentId",
+  });
+  Student.belongsToMany(Badge, {
+    through: StudentBadge,
+    foreignKey: "studentId",
+  });
 }

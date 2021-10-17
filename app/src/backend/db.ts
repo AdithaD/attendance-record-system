@@ -30,19 +30,22 @@ export async function initialise(): Promise<void> {
   part.model(db);
   topic.model(db);
   test.model(db);
-  test_schedule.model(db);
   badge.model(db);
+  workEvent.model(db);
+
+  test_schedule.model(db);
   studentBadge.model(db);
   studentParts.model(db);
-  workEvent.model(db);
   testBadge.model(db);
 
   test.relations();
   topic.relations();
   part.relations();
   test_schedule.relations();
+  badge.relations();
+  student.relations();
 
-  await db.sync({ alter: true }).then(() => {
+  await db.sync().then(() => {
     console.log("db initialized. priting all models");
     console.log(db.models);
   });

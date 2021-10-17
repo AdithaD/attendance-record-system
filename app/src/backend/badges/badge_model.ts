@@ -2,12 +2,25 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Test } from "./test_model";
 import { Student } from "../students/student_model";
 import { StudentBadge } from "../students/studentBadge_model";
+import { TestBadge } from "./testBadge_model";
+
+export enum Type {
+  A,
+  S,
+  C,
+}
+
+export enum Tier {
+  Diamond,
+  Platnium,
+  Lithium,
+}
 
 interface BadgeAttributes {
   badgeId: number;
   badgeName: string;
   badgeTier: string;
-  dateEarned: Date;
+  badgeType: string;
   notes: string | null;
 }
 
@@ -29,12 +42,19 @@ export function model(sequelize: Sequelize): void {
       },
       badgeTier: {
         type: DataTypes.STRING,
+        validate: {
+          isIn: [Object.keys(Tier)],
+        },
         allowNull: false,
       },
-      dateEarned: {
-        type: DataTypes.DATE,
+      badgeType: {
+        type: DataTypes.STRING,
+        validate: {
+          isIn: [Object.keys(Type)],
+        },
         allowNull: false,
       },
+
       notes: {
         type: DataTypes.TEXT,
         allowNull: true,
@@ -49,7 +69,10 @@ export function model(sequelize: Sequelize): void {
   console.log(Badge === sequelize.models.Badge);
 }
 
-export function relation(): void {
-  Badge.belongsToMany(Test, { through: "testBadge" });
-  Badge.belongsToMany(Student, { through: StudentBadge });
+export function relations(): void {
+  Badge.belongsToMany(Test, { through: TestBadge, foreignKey: "badgeId" });
+  Badge.belongsToMany(Student, {
+    through: StudentBadge,
+    foreignKey: "badgeId",
+  });
 }
