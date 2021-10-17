@@ -71,37 +71,6 @@
     </div>
     <div class="space-y-4">
       <TextField v-model="testName" title="Test Name" />
-      <div v-if="!showSchedule">
-        <button
-          @click="toggleSchedule"
-          class="text-gray-300 font-bold shadow-md rounded bg-gray-700 p-2"
-        >
-          Add to Schedule?
-        </button>
-      </div>
-      <div v-else class="flex">
-        <DateField v-model="schedule" title="Date Scheduled" />
-        <button
-          class="self-center py-2 px-4 text-red-500 font-bold"
-          type="button"
-          @click="toggleSchedule"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
     </div>
     <div class="space-y-4 text-gray-200 border-t-4 border-gray-700 pt-6">
       <div class="flex justify-between items-stretch">
@@ -162,7 +131,6 @@ import { Options, Vue } from "vue-class-component";
 import { addTest } from "@/backend/badges/badge_service";
 import TextField from "@/components/TextField.vue";
 import DateField from "@/components/DateField.vue";
-import dayjs from "dayjs";
 
 @Options({
   components: {
@@ -171,53 +139,19 @@ import dayjs from "dayjs";
   },
 })
 export default class AddTest extends Vue {
-  showSchedule = false;
   errors: Array<string> = [];
-
-  mounted(): void {
-    this.showSchedule = this.$store.state.testName != null;
-  }
-
   get testName(): string {
     return this.$store.state.testName;
   }
   set testName(value: string) {
     this.$store.commit("updateTestName", value);
   }
-
-  get schedule(): string {
-    return this.$store.state.testDate;
-  }
-
-  set schedule(value: string) {
-    console.log("updating");
-    this.$store.commit("updateTestDate", value);
-  }
-
-  toggleSchedule(): void {
-    this.showSchedule = !this.showSchedule;
-  }
-
-  validDate(date: string): boolean {
-    console.log(date);
-    return dayjs(date, "DD/MM/YYYY", false).isValid();
-  }
   async validate(): Promise<boolean> {
     while (this.errors.length > 0) {
       this.errors.pop();
     }
-
-    if (this.schedule && !this.validDate(this.schedule)) {
-      this.errors.push("Date is not valid");
-    }
-
     if (this.errors.length == 0) {
-      console.log(this.schedule);
-
-      let date = this.schedule
-        ? dayjs(this.schedule, "DD/MM/YYYY").toDate()
-        : null;
-      await addTest(this.$store.state.testName, date, this.$store.state.topics);
+      await addTest(this.$store.state.testName, this.$store.state.topics);
       this.$store.commit("clearTempTest");
       this.$router.back();
       return true;

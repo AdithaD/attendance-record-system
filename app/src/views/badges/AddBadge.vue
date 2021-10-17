@@ -81,12 +81,17 @@
           <h3 class="font-semibold text-gray-200">Type</h3>
           <select
             class="p-2 mt-2 flex-grow bg-gray-900 text-gray-200 w-full rounded"
-            name="type"
-            id="type"
+            name="level"
+            id="level"
+            v-model="selectedType"
           >
-            <option>Achievement</option>
-            <option>Special Interest / Skill</option>
-            <option>Core Curriculum</option>
+            <option
+              v-for="option in typeOptions"
+              :value="option.value"
+              :key="option.value"
+            >
+              {{ option.name }}
+            </option>
           </select>
         </div>
         <div class="flex-grow" style="flex-basis: 0">
@@ -96,15 +101,20 @@
             class="p-2 mt-2 flex-grow bg-gray-900 text-gray-200 w-full rounded"
             name="level"
             id="level"
+            v-model="selectedTier"
           >
-            <option>Diamond</option>
-            <option>Platnium</option>
-            <option>Lithium</option>
+            <option
+              v-for="option in tierOptions"
+              v-bind:value="option.value"
+              :key="option.value"
+            >
+              {{ option.name }}
+            </option>
           </select>
         </div>
       </div>
     </div>
-    <div class="space-y-4 text-gray-200 h-1/2 flex flex-col">
+    <div class="space-y-4 text-gray-200 flex flex-col h-96">
       <h2 class="text-3xl font-bold">Select Tests</h2>
       <div class="flex space-x-4 flex-grow">
         <div
@@ -153,7 +163,7 @@
           </div>
           <div
             v-if="this.tests.length > 0"
-            class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll h-full"
+            class="bg-gray-900 p-4 rounded space-y-4 overflow-y-auto h-full"
           >
             <div
               v-for="test in this.unselectedTests"
@@ -250,6 +260,13 @@
           </div>
         </div>
       </div>
+      <div class="py-2 space-y-2 flex-grow flex flex-col">
+        <h3 class="text-gray-300 font-bold">Notes</h3>
+        <textarea
+          v-model="notes"
+          class="py-2 px-2 rounded bg-gray-900 text-gray-300 w-full flex-grow"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -258,6 +275,8 @@
 import { Options, Vue } from "vue-class-component";
 import TextField from "@/components/TextField.vue";
 import { Test } from "@/backend/badges/test_model";
+import { addBadge } from "@/backend/badges/badge_service";
+import { Tier, Type } from "@/backend/badges/badge_model";
 
 type TestEntry = { test: Test; isOptional: boolean; list: number };
 
@@ -270,6 +289,22 @@ export default class AddTopic extends Vue {
   badgeName = "";
   newPart = "";
   testSearchTerms = "";
+
+  notes = "";
+
+  selectedTier = Tier.Diamond;
+  tierOptions = [
+    { name: "Diamond", value: Tier.Diamond },
+    { name: "Platinum", value: Tier.Platnium },
+    { name: "Lithium", value: Tier.Lithium },
+  ];
+
+  selectedType = Type.C;
+  typeOptions = [
+    { name: "Achievement", value: Type.A },
+    { name: "Special Interest / Skill", value: Type.S },
+    { name: "Core Curriculum", value: Type.C },
+  ];
 
   tests: Array<TestEntry> = [];
   errors: Array<string> = [];
@@ -312,15 +347,26 @@ export default class AddTopic extends Vue {
       this.errors.push("The name must not be empty.");
     }
 
-    if (this.tests.filter((value) => !value.isOptional).length != 10) {
-      this.errors.push("There must be 10 mandatory tests.");
-    }
+    // if (this.tests.filter((value) => !value.isOptional).length != 10) {
+    //   this.errors.push("There must be 10 mandatory tests.");
+    // }
 
-    if (this.tests.filter((value) => value.isOptional).length != 11) {
-      this.errors.push("There must be 11 optional tests");
-    }
+    // if (this.tests.filter((value) => value.isOptional).length != 11) {
+    //   this.errors.push("There must be 11 optional tests");
+    // }
 
-    //addBadge()
+    addBadge(
+      this.badgeName,
+      this.selectedType,
+      this.selectedTier,
+      this.notes,
+      this.selectedTests
+        .filter((test) => !test.isOptional)
+        .map((entry) => entry.test),
+      this.selectedTests
+        .filter((test) => test.isOptional)
+        .map((entry) => entry.test)
+    );
 
     return this.errors.length > 0;
   }

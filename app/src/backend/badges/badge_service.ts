@@ -1,12 +1,16 @@
 import TopicData from "@/store/Topic";
+import { Op } from "sequelize";
+import { StudentBadge } from "../students/studentBadge_model";
+import { StudentTests } from "../students/studentTests_model";
+import { Student } from "../students/student_model";
+import { Badge, Tier, Type } from "./badge_model";
 import { Part } from "./part_model";
+import { TestBadge } from "./testBadge_model";
 import { Test } from "./test_model";
-import { TestSchedule } from "./test_schedule_model";
 import { Topic } from "./topic_model";
 
 export async function addTest(
   name: string,
-  schedule: Date | null,
   topics: Array<TopicData>
 ): Promise<void> {
   console.log("adding test");
@@ -28,31 +32,132 @@ export async function addTest(
         });
       });
     });
-
-    if (schedule)
-      TestSchedule.create({ testId, date: schedule, completed: false });
   });
 }
 
-// export enum Type {
-//   A,
-//   S,
-//   C,
-// }
+export async function addBadge(
+  badgeName: string,
+  type: Type,
+  tier: Tier,
+  notes: string | null,
+  mandatoryTests: Test[],
+  optionalTests: Test[]
+): Promise<void> {
+  const badgeType = type.toString();
+  const badgeTier = tier.toString();
 
-// export enum Tier {
-//   Diamond,
-//   Platnium,
-//   Lithium,
-// }
+  const newBadge = await Badge.create({
+    badgeName,
+    badgeType,
+    badgeTier,
+    notes,
+  });
 
-// export function addBadge(
-//   name: String,
-//   type: Type,
-//   tier: Tier,
-//   mandatoryTests: Test[],
-//   optionalTests: Test[]
-// ) {}
+  const badgeId = newBadge.get("badgeId") as number;
+
+  mandatoryTests.forEach((test) => {
+    const testId = test.get("testId") as number;
+    TestBadge.create({
+      badgeId,
+      testId,
+      isOptional: false,
+    });
+  });
+
+  optionalTests.forEach((test) => {
+    const testId = test.get("testId") as number;
+    TestBadge.create({
+      badgeId,
+      testId,
+      isOptional: true,
+    });
+  });
+
+  updateBadgesForAllStudents(badgeId);
+}
+
+export async function updateBadgesForAllStudents(badgeId: number) {
+  const badge = await Badge.findByPk(badgeId, {
+    include: {
+      model: Test,
+      through: { attributes: [] },
+    },
+  });
+
+  if (badge) {
+    const tests = badge.get("Tests") as Test[];
+    const testPks = [] as number[];
+    tests.forEach((test) => {
+      testPks.push(test.get("testId") as number);
+    });
+
+    const students = await Student.findAll();
+
+    students.forEach(async (student) => {
+      const studentId = student.get("studentId") as number;
+      const count = (
+        await StudentTests.findAndCountAll({
+          where: {
+            studentId,
+            testId: {
+              [Op.in]: testPks,
+            },
+          },
+        })
+      ).count;
+
+      if (count == testPks.length) {
+        StudentBadge.create({
+          studentId,
+          badgeId,
+        });
+      }
+    });
+  } else {
+    throw Error("PK not found");
+  }
+}
+
+export async function updateBadgesForStudent(
+  studentId: number,
+  badgeId: number
+): Promise<void> {
+  const badge = await Badge.findByPk(badgeId, {
+    include: {
+      model: Test,
+      through: { attributes: [] },
+    },
+  });
+
+  if (badge) {
+    const tests = badge.get("Tests") as Test[];
+    const testPks = [] as number[];
+    tests.forEach((test) => {
+      testPks.push(test.get("testId") as number);
+    });
+
+    const count = (
+      await StudentTests.findAndCountAll({
+        where: {
+          studentId,
+          testId: {
+            [Op.in]: testPks,
+          },
+        },
+      })
+    ).count;
+
+    if (count == testPks.length) {
+      StudentBadge.create({
+        studentId,
+        badgeId,
+      });
+    }
+  } else {
+    throw Error("PK not found");
+  }
+}
+
 export class StudentBadgeCount {
   public studentId: number;
   public diamond: number;
