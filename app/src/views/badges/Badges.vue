@@ -39,7 +39,12 @@
         All Badges
       </h2>
       <div class="bg-gray-900 p-4 space-y-4 rounded shadow-md">
-        <div v-for="badge in this.badges" :key="badge" class="flex space-x-2">
+        <div
+          v-for="badge in this.badges"
+          :key="badge"
+          class="flex space-x-2"
+          @click="openBadge(badge)"
+        >
           <p
             class="
               bg-gray-700
@@ -65,6 +70,7 @@
 <script lang="ts">
 import { Badge } from "@/backend/badges/badge_model";
 import { defineComponent, onMounted, ref } from "vue";
+import { openBadge } from "@/utils/utils";
 
 export default defineComponent({
   components: {},
@@ -77,6 +83,7 @@ export default defineComponent({
 
     return {
       badges,
+      openBadge,
     };
   },
 });
