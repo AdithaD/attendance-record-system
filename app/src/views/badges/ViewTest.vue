@@ -110,9 +110,10 @@
         </div>
       </div>
 
-      <div>
+      <div class="bg-gray-900 p-4 rounded">
         <h2 class="text-gray-200 font-semibold" v-for="s in schedule" :key="s">
-          Scheduled on: {{ this.formatDate(s.date) }}
+          Scheduled on: {{ this.formatDate(s.date) }}. Supervisor:
+          {{ s.get("teacher") }}
         </h2>
       </div>
 

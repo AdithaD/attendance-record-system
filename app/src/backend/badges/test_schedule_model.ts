@@ -5,6 +5,7 @@ interface TestScheduleAttributes {
   testScheduleId: number;
   testId: number;
   date: Date;
+  teacher: string;
   completed: boolean;
 }
 type TestScheduleCreationAttributes = Optional<
@@ -31,6 +32,10 @@ export function model(sequelize: Sequelize): void {
       date: {
         type: DataTypes.DATE,
         allowNull: false,
+      },
+      teacher: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       completed: {
         type: DataTypes.BOOLEAN,

@@ -70,8 +70,9 @@
           </button>
         </div>
       </div>
-      <div>
+      <div class="space-y-4">
         <DateField title="Schedule Date" v-model="schedule" />
+        <TextField title="Supervising Teacher" v-model="teacher" />
       </div>
     </div>
   </div>
@@ -83,16 +84,20 @@ import dayjs from "dayjs";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import DateField from "@/components/DateField.vue";
+import TextField from "@/components/TextField.vue";
+
 import { TestSchedule } from "@/backend/badges/test_schedule_model";
 
 export default defineComponent({
-  components: { DateField },
+  components: { DateField, TextField },
   setup() {
     const testId = +useRoute().params.id;
     const test = ref(null as Test | null);
 
     const schedule = ref("");
     const errors = reactive([] as string[]);
+
+    const teacher = ref("");
 
     onMounted(async () => {
       test.value = await Test.findByPk(testId);
@@ -111,9 +116,11 @@ export default defineComponent({
         return;
       } else {
         let date = dayjs(schedule.value, "DD/MM/YYYY").toDate();
+        let t = teacher.value;
         TestSchedule.create({
           testId,
           date,
+          teacher: t,
           completed: false,
         });
         router.back();
@@ -128,6 +135,7 @@ export default defineComponent({
       validate,
       errors,
       router,
+      teacher,
     };
   },
 });
