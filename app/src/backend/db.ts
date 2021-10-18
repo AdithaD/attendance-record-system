@@ -50,8 +50,10 @@ export async function initialise(): Promise<void> {
   student.relations();
   studentBadge.relations();
   testBadge.relations();
+  workEvent.relations();
+  studentParts.relations();
 
-  await db.sync({}).then(() => {
+  await db.sync().then(() => {
     console.log("db initialized. priting all models");
     console.log(db.models);
   });
