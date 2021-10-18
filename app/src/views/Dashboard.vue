@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 space-y-8 w-full">
     <h1 class="title">Dashboard</h1>
-    <div class="rounded shadow-md space-y-2">
+    <div class="rounded shadow-md">
       <h2
         class="text-2xl text-gray-200 font-bold py-2 px-4 rounded bg-gray-700"
       >
@@ -15,8 +15,9 @@
         >
           <div class="text-blue-500 w-32">{{ getDate(sb) }}</div>
           <p>
-            {{ sb.Badge.get("badgeName") }} {{ sb.Student.get("firstName") }}
-            {{ sb.Student.get("lastName") }}
+            {{ sb.Student.get("firstName") }}
+            {{ sb.Student.get("lastName") }} earned
+            {{ sb.Badge.get("badgeName") }}
           </p>
         </div>
       </div>

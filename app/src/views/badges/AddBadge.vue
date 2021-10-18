@@ -368,6 +368,8 @@ export default class AddTopic extends Vue {
         .map((entry) => entry.test)
     );
 
+    this.$router.back();
+
     return this.errors.length > 0;
   }
 }

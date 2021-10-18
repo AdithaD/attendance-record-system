@@ -86,11 +86,54 @@
         </div>
       </div>
 
-      <div class="rounded shadow-md bg-gray-700 py-2 px-4">
-        <h2 class="text-2xl text-gray-200 font-bold">Badges</h2>
+      <div class="rounded shadow-md">
+        <h2
+          class="text-2xl text-gray-200 font-bold bg-gray-700 py-2 px-4 rounded"
+        >
+          Badges
+        </h2>
+        <div class="bg-gray-900 p-4 rounded">
+          <div
+            class="text-gray-200 font-semibold flex space-x-2 select-none"
+            v-for="sb in this.student.get('Badges')"
+            :key="sb"
+          >
+            <div class="text-blue-500 w-32">
+              {{ getDate(sb.get("StudentBadge").get("createdAt")) }}
+            </div>
+            <p>
+              {{ sb.get("badgeName") }}
+            </p>
+          </div>
+          <p
+            class="text-gray-400"
+            v-if="this.student.get('Badges').length <= 0"
+          >
+            No Badges Earned
+          </p>
+        </div>
       </div>
-      <div class="rounded shadow-md bg-gray-700 py-2 px-4">
-        <h2 class="text-2xl text-gray-200 font-bold">Attendance</h2>
+      <div class="rounded shadow-md">
+        <h2
+          class="text-2xl text-gray-200 font-bold bg-gray-700 py-2 px-4 rounded"
+        >
+          Attendance
+        </h2>
+        <div class="bg-gray-900 p-4 rounded">
+          <div
+            class="text-gray-200 font-semibold flex space-x-2 select-none"
+            v-for="event in this.activity"
+            :key="event"
+          >
+            <div class="text-blue-500 w-32">
+              {{ getDate(event.get("date")) }}
+            </div>
+            <span>Completed</span>
+            <p v-for="sp in event.get('StudentParts')" :key="sp">
+              {{ sp.get("Part").get("name") }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <h1 class="title" v-else>No Student Found</h1>
@@ -98,23 +141,55 @@
 </template>
 
 <script lang="ts">
+import { Badge } from "@/backend/badges/badge_model";
+import { Part } from "@/backend/badges/part_model";
+import { StudentParts } from "@/backend/students/studentParts_model";
 import { Student } from "@/backend/students/student_model";
+import { WorkEvent } from "@/backend/workEvent/workEvent_model";
 import router from "@/router";
 import dayjs from "dayjs";
+import { Sequelize } from "sequelize";
 import { Vue } from "vue-class-component";
 
 export default class StudentProfile extends Vue {
   // Class properties will be component data
   student: Student | null = null;
+  activity: WorkEvent[] = [];
 
-  mounted(): void {
-    Student.findOne({
+  async mounted(): Promise<void> {
+    await Student.findOne({
       where: { studentId: this.$route.params.id },
+      include: [
+        {
+          model: Badge,
+        },
+        {
+          model: StudentParts,
+        },
+      ],
     }).then((data) => {
       if (data) {
         this.student = data;
+        console.log(this.student);
       }
     });
+
+    this.activity = await WorkEvent.findAll({
+      include: {
+        model: StudentParts,
+        include: [
+          {
+            model: Part,
+          },
+        ],
+        where: {
+          studentId: this.$route.params.id,
+          workEventId: Sequelize.col("WorkEvent.workEventId"),
+        },
+      },
+    });
+
+    console.log(this.activity);
   }
   getDate(): string {
     return dayjs(this.student?.getDataValue("dateOfBirth")).format(

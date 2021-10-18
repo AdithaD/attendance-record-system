@@ -74,7 +74,7 @@
       </div>
       <div class="rounded shadow-md overflow-y-auto">
         <h2 class="text-2xl text-gray-200 font-bold p-2 bg-gray-700">Tests</h2>
-        <div class="bg-gray-900 p-4">
+        <div class="bg-gray-900 p-4 space-y-4">
           <div
             v-for="test in this.badge.Tests"
             :key="test.get('testId')"
@@ -85,10 +85,18 @@
               rounded
               text-gray-200
               font-semibold
+              justify-between
+              flex
             "
             @click="openTest(test)"
           >
             <h3>{{ test.get("name") }}</h3>
+            <p
+              class="text-gray-900"
+              v-if="test.get('TestBadge').get('isOptional')"
+            >
+              Optional
+            </p>
           </div>
         </div>
       </div>
@@ -115,7 +123,7 @@ export default defineComponent({
       badge.value = await Badge.findByPk(+badgeId, {
         include: {
           model: Test,
-          through: { attributes: [] },
+          through: { attributes: ["isOptional"] },
         },
       });
     });
