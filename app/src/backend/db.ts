@@ -13,6 +13,7 @@ import * as studentTests from "./students/studentTests_model";
 
 import * as workEvent from "./workEvent/workEvent_model";
 import * as testBadge from "./badges/testBadge_model";
+import { updateBadges } from "./badges/badge_service";
 
 export const db = new Sequelize({
   dialectModule: sqlite3,
@@ -48,9 +49,12 @@ export async function initialise(): Promise<void> {
   badge.relations();
   student.relations();
   studentBadge.relations();
+  testBadge.relations();
 
   await db.sync({}).then(() => {
     console.log("db initialized. priting all models");
     console.log(db.models);
   });
+
+  updateBadges().then(() => console.log("success"));
 }

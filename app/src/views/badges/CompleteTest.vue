@@ -148,8 +148,8 @@
 </template>
 
 <script lang="ts">
+import { completeTest } from "@/backend/badges/badge_service";
 import { Test } from "@/backend/badges/test_model";
-import { TestSchedule } from "@/backend/badges/test_schedule_model";
 import { StudentTests } from "@/backend/students/studentTests_model";
 import { Student } from "@/backend/students/student_model";
 import { Op } from "sequelize";
@@ -271,16 +271,12 @@ export default defineComponent({
       } else {
         // Submit to database
         selectedStudents.value.forEach((student) => {
+          completeTest(student.get("studentId") as number, testId, schedID);
+
           console.log("adding");
-          StudentTests.create({
-            testId,
-            studentId: student.get("studentId") as number,
-          });
         });
 
         // Set completed in database
-        if (schedID)
-          (await TestSchedule.findByPk(schedID))?.update({ completed: true });
 
         router.back();
       }

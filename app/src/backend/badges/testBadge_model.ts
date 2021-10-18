@@ -43,3 +43,8 @@ export function model(sequelize: Sequelize): void {
     }
   );
 }
+
+export function relations(): void {
+  TestBadge.belongsTo(Test, { foreignKey: "testId" });
+  TestBadge.belongsTo(Badge, { foreignKey: "badgeId" });
+}

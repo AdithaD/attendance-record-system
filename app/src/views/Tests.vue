@@ -109,7 +109,10 @@
           >
             {{ schedule.Test.name }}
           </p>
-          <div class="hover:bg-green-500 transition-colors rounded p-2">
+          <div
+            v-if="!schedule.get('completed')"
+            class="hover:bg-green-500 transition-colors rounded p-2"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-6 w-6 self-center text-gray-200 hover:text-gray-900"
@@ -150,33 +153,35 @@
       >
         All Tests
       </h2>
-      <div
-        v-for="test in this.tests"
-        :key="test.get('testId')"
-        class="flex space-x-2 bg-gray-900 p-4"
-        @click="
-          router.push({
-            name: 'ViewTest',
-            params: { id: test.get('testId') },
-          })
-        "
-      >
-        <p
-          class="
-            bg-gray-700
-            py-2
-            text-gray-200
-            font-semibold
-            shadow-md
-            px-2
-            rounded
-            transition-colors
-            hover:text-white hover:bg-blue-500
-            flex-grow
+      <div class="space-y-4 bg-gray-900 py-4 px-4">
+        <div
+          v-for="test in this.tests"
+          :key="test.get('testId')"
+          class="flex space-x-2"
+          @click="
+            router.push({
+              name: 'ViewTest',
+              params: { id: test.get('testId') },
+            })
           "
         >
-          {{ test.name }}
-        </p>
+          <p
+            class="
+              bg-gray-700
+              py-2
+              text-gray-200
+              font-semibold
+              shadow-md
+              px-2
+              rounded
+              transition-colors
+              hover:text-white hover:bg-blue-500
+              flex-grow
+            "
+          >
+            {{ test.name }}
+          </p>
+        </div>
       </div>
     </div>
   </div>

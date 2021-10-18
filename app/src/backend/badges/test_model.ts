@@ -52,4 +52,6 @@ export function relations(): void {
   });
 
   Test.belongsToMany(Badge, { through: TestBadge, foreignKey: "testId" });
+
+  Test.hasMany(TestBadge, { foreignKey: "testId" });
 }

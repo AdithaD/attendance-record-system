@@ -7,6 +7,7 @@ import { Badge, Tier, Type } from "./badge_model";
 import { Part } from "./part_model";
 import { TestBadge } from "./testBadge_model";
 import { Test } from "./test_model";
+import { TestSchedule } from "./test_schedule_model";
 import { Topic } from "./topic_model";
 
 export async function addTest(
@@ -73,89 +74,138 @@ export async function addBadge(
     });
   });
 
-  updateBadgesForAllStudents(badgeId);
+  updateBadgeForAllStudents(badgeId);
 }
 
-export async function updateBadgesForAllStudents(badgeId: number) {
-  const badge = await Badge.findByPk(badgeId, {
-    include: {
-      model: Test,
-      through: { attributes: [] },
-    },
-  });
+export async function updateBadgeForAllStudents(
+  badgeId: number
+): Promise<void> {
+  Student.findAll().then((students) =>
+    students.forEach((student) =>
+      updateBadgeForStudent(student.get("studentId") as number, badgeId)
+    )
+  );
+}
 
-  if (badge) {
-    const tests = badge.get("Tests") as Test[];
-    const testPks = [] as number[];
-    tests.forEach((test) => {
-      testPks.push(test.get("testId") as number);
+export async function updateBadgeForStudent(
+  studentId: number,
+  badgeId: number
+): Promise<void> {
+  if (
+    !(await StudentBadge.findOne({
+      where: {
+        studentId,
+        badgeId,
+      },
+    }))
+  ) {
+    const badge = await Badge.findByPk(badgeId, {
+      include: {
+        model: TestBadge,
+        include: [Test],
+      },
     });
 
-    const students = await Student.findAll();
+    if (badge) {
+      const tb = badge.get("TestBadges") as TestBadge[];
 
-    students.forEach(async (student) => {
-      const studentId = student.get("studentId") as number;
-      const count = (
+      const oTest = tb
+        .filter((tb) => tb.get("isOptional") as boolean)
+        .map((tb) => tb.get("Test") as Test);
+      const mTest = tb
+        .filter((tb) => !tb.get("isOptional") as boolean)
+        .map((tb) => tb.get("Test") as Test);
+
+      let count = 0;
+      oTest.forEach(async (test) => {
+        if (
+          await StudentTests.findOne({
+            where: {
+              studentId,
+              testId: test.get("testId") as number,
+            },
+          })
+        ) {
+          count++;
+        }
+      });
+
+      const mTestDone = (
         await StudentTests.findAndCountAll({
           where: {
             studentId,
             testId: {
-              [Op.in]: testPks,
+              [Op.in]: mTest.map((test) => test.get("testId") as number),
             },
           },
         })
       ).count;
 
-      if (count == testPks.length) {
+      if (count >= oTest.length && mTestDone == mTest.length)
         StudentBadge.create({
           studentId,
           badgeId,
         });
-      }
-    });
-  } else {
-    throw Error("PK not found");
+    } else {
+      throw Error("PK not found");
+    }
   }
 }
 
-export async function updateBadgesForStudent(
+export async function completeTest(
   studentId: number,
-  badgeId: number
+  testId: number,
+  schedID: number | null
 ): Promise<void> {
-  const badge = await Badge.findByPk(badgeId, {
-    include: {
-      model: Test,
-      through: { attributes: [] },
-    },
+  // Add record
+  StudentTests.create({
+    testId,
+    studentId,
   });
 
-  if (badge) {
-    const tests = badge.get("Tests") as Test[];
-    const testPks = [] as number[];
-    tests.forEach((test) => {
-      testPks.push(test.get("testId") as number);
+  // Update schedule to completed
+  if (schedID)
+    (await TestSchedule.findByPk(schedID))?.update({ completed: true });
+
+  // Update badge completion
+  (
+    await TestBadge.findAll({
+      where: {
+        testId,
+      },
+      attributes: ["badgeId"],
+    })
+  ) // get badge ids
+    .forEach((tb) =>
+      updateBadgeForStudent(studentId, tb.get("badgeId") as number)
+    ); //
+}
+
+export async function updateBadges(): Promise<void> {
+  const students = await Student.findAll({
+    include: StudentBadge,
+  });
+
+  await students.forEach(async (student) => {
+    const bIds = (student.get("StudentBadges") as StudentBadge[]).map(
+      (sb) => sb.get("badgeId") as number
+    );
+
+    const badgesToCheck = await Badge.findAll({
+      where: {
+        badgeId: {
+          [Op.notIn]: bIds,
+        },
+      },
     });
 
-    const count = (
-      await StudentTests.findAndCountAll({
-        where: {
-          studentId,
-          testId: {
-            [Op.in]: testPks,
-          },
-        },
-      })
-    ).count;
-
-    if (count == testPks.length) {
-      StudentBadge.create({
-        studentId,
-        badgeId,
-      });
-    }
-  } else {
-    throw Error("PK not found");
-  }
+    badgesToCheck.forEach((badge) => {
+      updateBadgeForStudent(
+        student.get("studentId") as number,
+        badge.get("badgeId") as number
+      );
+    });
+  });
 }
 
 export class StudentBadgeCount {

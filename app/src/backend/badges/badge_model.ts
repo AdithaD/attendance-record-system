@@ -76,4 +76,5 @@ export function relations(): void {
     foreignKey: "badgeId",
   });
   Badge.hasMany(StudentBadge, { foreignKey: "badgeId" });
+  Badge.hasMany(TestBadge, { foreignKey: "badgeId" });
 }
