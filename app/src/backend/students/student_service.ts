@@ -43,4 +43,9 @@ export async function getSchedule(): Promise<void> {
   const upcomingTests = await TestSchedule.findAll({
     order: [sequelize.fn("max", sequelize.col("date")), "DESC"],
   });
+  if (upcomingTests === null) {
+    console.log("No upcoming Tests");
+  } else {
+    console.log(upcomingTests instanceof TestSchedule);
+  }
 }
