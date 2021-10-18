@@ -2,6 +2,9 @@ import { Sequelize, Model, DataTypes, Optional } from "sequelize";
 import { TestSchedule } from "./test_schedule_model";
 import { Badge } from "./badge_model";
 import { Topic } from "./topic_model";
+import { TestBadge } from "./testBadge_model";
+import { Student } from "../students/student_model";
+import { StudentTests } from "../students/studentTests_model";
 
 interface TestAttributes {
   testId: number;
@@ -42,8 +45,13 @@ export function relations(): void {
   Test.hasMany(TestSchedule, {
     foreignKey: { name: "testId" },
   });
-}
 
-export function relation(): void {
-  Test.belongsToMany(Badge, { through: "testBadge" });
+  Test.belongsToMany(Student, {
+    through: StudentTests,
+    foreignKey: "testId",
+  });
+
+  Test.belongsToMany(Badge, { through: TestBadge, foreignKey: "testId" });
+
+  Test.hasMany(TestBadge, { foreignKey: "testId" });
 }

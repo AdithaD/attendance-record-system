@@ -1,39 +1,38 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Part } from "../badges/part_model";
+import { StudentParts } from "../students/studentParts_model";
 
-interface workEventAttributes {
+interface WorkEventAttributes {
   workEventId: number;
   date: Date;
-  type: String;
 }
 
-type workEventCreationAttributes = Optional<workEventAttributes, "workEventId">;
-export class workEvent extends Model<
-  workEventAttributes,
-  workEventCreationAttributes
+type WorkEventCreationAttributes = Optional<WorkEventAttributes, "workEventId">;
+export class WorkEvent extends Model<
+  WorkEventAttributes,
+  WorkEventCreationAttributes
 > {}
 
 export function model(sequelize: Sequelize): void {
-  workEvent.init(
+  WorkEvent.init(
     {
       workEventId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: false,
+        autoIncrement: true,
       },
       date: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      type: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
     },
     {
       sequelize,
-      modelName: "workEvent",
+      modelName: "WorkEvent",
     }
   );
-  console.log(workEvent.sequelize);
-  console.log(workEvent === sequelize.models.Badge);
+}
+
+export function relations(): void {
+  WorkEvent.hasMany(StudentParts, { foreignKey: "workEventId" });
 }

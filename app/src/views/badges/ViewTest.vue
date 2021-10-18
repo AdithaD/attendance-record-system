@@ -12,6 +12,43 @@
               shadow-md
               py-2
               px-4
+              bg-gray-900
+              text-gray-200 text-xl
+              font-bold
+              self-center
+              transition
+              transform
+              hover:scale-105 hover:bg-gray-800
+            "
+            type="button"
+            @click="
+              router.push({
+                name: 'ScheduleTest',
+                params: { id: test.get('testId') },
+              })
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </button>
+          <button
+            class="
+              rounded
+              shadow-md
+              py-2
+              px-4
               bg-blue-700
               text-gray-200 text-xl
               font-bold
@@ -73,9 +110,10 @@
         </div>
       </div>
 
-      <div>
+      <div class="bg-gray-900 p-4 rounded">
         <h2 class="text-gray-200 font-semibold" v-for="s in schedule" :key="s">
-          Scheduled on: {{ this.formatDate(s.date) }}
+          Scheduled on: {{ this.formatDate(s.date) }}. Supervisor:
+          {{ s.get("teacher") }}
         </h2>
       </div>
 
@@ -86,13 +124,56 @@
           :key="topic.get('topicId')"
           class="bg-gray-900 p-4 text-gray-200 font-semibold"
         >
-          <h3>{{ topic.get("name") }}</h3>
+          <h3>Topic: {{ topic.get("name") }}</h3>
           <div class="px-4 py-2 ml-6 mt-2 border-l border-blue-600">
             <p v-for="part in topic.Parts" :key="part.get('partId')">
               {{ part.get("name") }}
             </p>
           </div>
         </div>
+      </div>
+      <div class="rounded shadow-md overflow-y-auto">
+        <div class="flex justify-between bg-gray-700 px-4 py-2">
+          <h2 class="text-2xl text-gray-200 font-bold self-center">
+            Students Completed
+          </h2>
+          <div class="space-x-4 self-center flex">
+            <button
+              class="
+                rounded
+                shadow-md
+                py-2
+                px-4
+                bg-gray-900
+                text-gray-200 text-l
+                font-bold
+                h-1/4
+                transition
+                transform
+                hover:scale-105
+              "
+              type="button"
+              @click="
+                $router.push({ name: 'CompleteTest', params: { id: testId } })
+              "
+            >
+              Record Student Completion
+            </button>
+          </div>
+        </div>
+        <div
+          v-for="student in test.Students"
+          :key="student"
+          class="bg-gray-900 p-4 text-gray-200 font-semibold"
+        >
+          <h3>{{ student.get("firstName") }} {{ student.get("lastName") }}</h3>
+        </div>
+        <p
+          v-if="test.Students.length <= 0"
+          class="text-gray-300 bg-gray-900 p-4"
+        >
+          No students have completed this test
+        </p>
       </div>
     </div>
     <h1 class="title" v-else>No Student Found</h1>
@@ -103,14 +184,23 @@
 import { Part } from "@/backend/badges/part_model";
 import { Test } from "@/backend/badges/test_model";
 import { Topic } from "@/backend/badges/topic_model";
-import { computed, ComputedRef, defineComponent, ref } from "vue";
-import { useRoute } from "vue-router";
+import { defineComponent, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 import { TestSchedule } from "@/backend/badges/test_schedule_model";
+import { StudentTests } from "@/backend/students/studentTests_model";
+import { Student } from "@/backend/students/student_model";
 
 export default defineComponent({
   async mounted() {
-    this.test = await Test.findByPk(+this.testId);
+    this.test = await Test.findByPk(+this.testId, {
+      include: {
+        model: Student,
+        through: { attributes: ["createdAt"] },
+      },
+    });
+
+    console.log(this.test);
 
     this.schedule = await TestSchedule.findAll({
       where: {
@@ -122,8 +212,6 @@ export default defineComponent({
       where: { testId: this.testId },
       include: Part,
     });
-
-    console.log(this.topics);
   },
   setup() {
     const route = useRoute();
@@ -133,9 +221,13 @@ export default defineComponent({
     const schedule = ref([] as TestSchedule[]);
     const topics = ref([] as Topic[]);
 
+    const studentTests = ref([] as StudentTests[]);
+
     function formatDate(date: Date): string {
       return dayjs(date).format("DD/MM/YYYY");
     }
+
+    const router = useRouter();
 
     return {
       testId,
@@ -143,6 +235,8 @@ export default defineComponent({
       schedule,
       topics,
       formatDate,
+      studentTests,
+      router,
     };
   },
 });

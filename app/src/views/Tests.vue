@@ -59,39 +59,19 @@
         />
       </div>
     </div>
-
     <div>
       <div class="rounded shadow-md bg-gray-700 py-2 px-4 flex justify-between">
         <h2 class="text-2xl text-gray-200 font-bold self-center">Schedule</h2>
-        <button
-          class="
-            rounded
-            shadow-md
-            py-2
-            px-4
-            bg-gray-900
-            text-gray-200 text-xl
-            font-bold
-            transition
-            transform
-            hover:scale-105
-          "
-          type="button"
-        >
-          Schedule Test
-        </button>
       </div>
       <div class="bg-gray-900 p-4 space-y-4">
+        <p v-if="this.schedule.length <= 0" class="text-gray-400 text-center">
+          Your schedule is empty!
+        </p>
         <div
           v-for="schedule in this.schedule"
           :key="schedule.Test.get('testId')"
           class="flex space-x-2"
-          @click="
-            router.push({
-              name: 'ViewTest',
-              params: { id: schedule.Test.get('testId') },
-            })
-          "
+          :class="{ 'opacity-30': schedule.get('completed') }"
         >
           <p
             class="
@@ -107,6 +87,106 @@
           >
             {{ getDate(schedule.Test.get("date")) }}
           </p>
+          <div
+            class="
+              bg-gray-700
+              py-2
+              text-gray-200
+              font-semibold
+              shadow-md
+              px-2
+              rounded
+              transition-colors
+              hover:text-white hover:bg-blue-500
+              flex-grow flex
+              justify-between
+            "
+            @click="
+              router.push({
+                name: 'ViewTest',
+                params: { id: schedule.Test.get('testId') },
+              })
+            "
+          >
+            <p>
+              {{ schedule.Test.name }}
+            </p>
+            <div class="flex space-x-1 px-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              <p class="">
+                {{ schedule.teacher }}
+              </p>
+            </div>
+          </div>
+          <div
+            v-if="!schedule.get('completed')"
+            class="hover:bg-green-500 transition-colors rounded p-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 self-center text-gray-200 hover:text-gray-900"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              @click="
+                router.push({
+                  name: 'CompleteTest',
+                  params: {
+                    id: schedule.Test.get('testId'),
+                    sched_id: schedule.get('testScheduleId'),
+                  },
+                })
+              "
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2
+        class="
+          p-4
+          bg-gray-700
+          rounded
+          text-2xl text-gray-200
+          font-bold
+          self-center
+        "
+      >
+        All Tests
+      </h2>
+      <div class="space-y-4 bg-gray-900 py-4 px-4">
+        <div
+          v-for="test in this.tests"
+          :key="test.get('testId')"
+          class="flex space-x-2"
+          @click="
+            router.push({
+              name: 'ViewTest',
+              params: { id: test.get('testId') },
+            })
+          "
+        >
           <p
             class="
               bg-gray-700
@@ -121,7 +201,7 @@
               flex-grow
             "
           >
-            {{ schedule.Test.name }}
+            {{ test.name }}
           </p>
         </div>
       </div>
@@ -143,6 +223,7 @@ export default defineComponent({
     const searchTerms = ref("");
 
     const schedule = ref([] as TestSchedule[]);
+    const tests = ref([] as Test[]);
 
     function search() {
       router
@@ -167,6 +248,8 @@ export default defineComponent({
         include: Test,
         order: ["date"],
       });
+
+      tests.value = await Test.findAll();
     });
 
     return {
@@ -175,6 +258,7 @@ export default defineComponent({
       schedule,
       getDate,
       router,
+      tests,
     };
   },
 });
