@@ -116,19 +116,16 @@ export async function updateBadgeForStudent(
         .filter((tb) => !tb.get("isOptional") as boolean)
         .map((tb) => tb.get("Test") as Test);
 
-      let count = 0;
-      oTest.forEach(async (test) => {
-        if (
-          await StudentTests.findOne({
-            where: {
-              studentId,
-              testId: test.get("testId") as number,
+      const oTestDone = (
+        await StudentTests.findAndCountAll({
+          where: {
+            studentId,
+            testId: {
+              [Op.in]: oTest.map((test) => test.get("testId") as number),
             },
-          })
-        ) {
-          count++;
-        }
-      });
+          },
+        })
+      ).count;
 
       const mTestDone = (
         await StudentTests.findAndCountAll({
@@ -141,7 +138,11 @@ export async function updateBadgeForStudent(
         })
       ).count;
 
-      if (count >= oTest.length && mTestDone == mTest.length)
+      console.log(studentId);
+      console.log(`oTestDone   ${oTestDone} and oTest.length ${oTest.length}`);
+      console.log(`mTestDone ${mTestDone} and mTest.length ${mTest.length}`);
+
+      if (oTestDone >= oTest.length && mTestDone == mTest.length)
         StudentBadge.create({
           studentId,
           badgeId,
