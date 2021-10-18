@@ -1,4 +1,5 @@
 import { Sequelize, Model, DataTypes, Optional } from "sequelize";
+import { Student } from "../students/student_model";
 import { Test } from "./test_model";
 import { Topic } from "./topic_model";
 
@@ -39,4 +40,6 @@ export function relations(): void {
   TestSchedule.belongsTo(Test, {
     foreignKey: { name: "testId" },
   });
+
+  TestSchedule.belongsTo(Student);
 }

@@ -42,8 +42,6 @@ export function relations(): void {
   Test.hasMany(TestSchedule, {
     foreignKey: { name: "testId" },
   });
-}
 
-export function relation(): void {
   Test.belongsToMany(Badge, { through: "testBadge" });
 }
