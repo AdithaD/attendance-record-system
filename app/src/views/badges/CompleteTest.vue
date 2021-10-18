@@ -149,6 +149,7 @@
 
 <script lang="ts">
 import { Test } from "@/backend/badges/test_model";
+import { TestSchedule } from "@/backend/badges/test_schedule_model";
 import { StudentTests } from "@/backend/students/studentTests_model";
 import { Student } from "@/backend/students/student_model";
 import { Op } from "sequelize";
@@ -166,6 +167,9 @@ export default defineComponent({
     const test = ref(null as Test | null);
 
     const testId = +useRoute().params.id;
+    const schedID = useRoute().params.sched_id
+      ? +useRoute().params.sched_id
+      : null;
 
     onMounted(async () => {
       test.value = await Test.findByPk(testId);
@@ -253,7 +257,7 @@ export default defineComponent({
       if (studentObj) studentObj.list = dest;
     }
 
-    function validate(): void {
+    async function validate(): Promise<void> {
       while (errors.length > 0) {
         errors.pop();
       }
@@ -273,6 +277,10 @@ export default defineComponent({
             studentId: student.get("studentId") as number,
           });
         });
+
+        // Set completed in database
+        if (schedID)
+          (await TestSchedule.findByPk(schedID))?.update({ completed: true });
 
         router.back();
       }

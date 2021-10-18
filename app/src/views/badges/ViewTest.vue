@@ -12,6 +12,43 @@
               shadow-md
               py-2
               px-4
+              bg-gray-900
+              text-gray-200 text-xl
+              font-bold
+              self-center
+              transition
+              transform
+              hover:scale-105 hover:bg-gray-800
+            "
+            type="button"
+            @click="
+              router.push({
+                name: 'ScheduleTest',
+                params: { id: test.get('testId') },
+              })
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </button>
+          <button
+            class="
+              rounded
+              shadow-md
+              py-2
+              px-4
               bg-blue-700
               text-gray-200 text-xl
               font-bold
@@ -147,7 +184,7 @@ import { Part } from "@/backend/badges/part_model";
 import { Test } from "@/backend/badges/test_model";
 import { Topic } from "@/backend/badges/topic_model";
 import { defineComponent, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 import { TestSchedule } from "@/backend/badges/test_schedule_model";
 import { StudentTests } from "@/backend/students/studentTests_model";
@@ -189,6 +226,8 @@ export default defineComponent({
       return dayjs(date).format("DD/MM/YYYY");
     }
 
+    const router = useRouter();
+
     return {
       testId,
       test,
@@ -196,6 +235,7 @@ export default defineComponent({
       topics,
       formatDate,
       studentTests,
+      router,
     };
   },
 });
