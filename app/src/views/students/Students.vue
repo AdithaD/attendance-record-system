@@ -133,10 +133,10 @@
       </div>
     </div>
 
-    <div
-      class="rounded shadow-md bg-gray-700 pt-2 pb-4 px-4 h-3/5 flex flex-col"
-    >
-      <h2 class="text-2xl text-gray-200 font-bold mb-4">Top Students</h2>
+    <div class="rounded shadow-md h-3/5 flex flex-col">
+      <h2 class="text-2xl text-gray-200 bg-gray-700 p-4 font-bold rounded">
+        Top Students
+      </h2>
       <div
         v-if="this.students.length > 0"
         class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll flex-grow"

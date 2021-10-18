@@ -123,7 +123,7 @@
           :key="topic.get('topicId')"
           class="bg-gray-900 p-4 text-gray-200 font-semibold"
         >
-          <h3>{{ topic.get("name") }}</h3>
+          <h3>Topic: {{ topic.get("name") }}</h3>
           <div class="px-4 py-2 ml-6 mt-2 border-l border-blue-600">
             <p v-for="part in topic.Parts" :key="part.get('partId')">
               {{ part.get("name") }}

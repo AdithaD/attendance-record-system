@@ -98,9 +98,6 @@
             v-for="sb in this.student.get('Badges')"
             :key="sb"
           >
-            <div class="text-blue-500 w-32">
-              {{ getDate(sb.get("StudentBadge").get("createdAt")) }}
-            </div>
             <p>
               {{ sb.get("badgeName") }}
             </p>
@@ -117,7 +114,7 @@
         <h2
           class="text-2xl text-gray-200 font-bold bg-gray-700 py-2 px-4 rounded"
         >
-          Attendance
+          Activity
         </h2>
         <div class="bg-gray-900 p-4 rounded">
           <div
@@ -126,12 +123,9 @@
             :key="event"
           >
             <div class="text-blue-500 w-32">
-              {{ getDate(event.get("date")) }}
+              {{ printDate(event.date) }}
             </div>
-            <span>Completed</span>
-            <p v-for="sp in event.get('StudentParts')" :key="sp">
-              {{ sp.get("Part").get("name") }}
-            </p>
+            <p>{{ event.message }}</p>
           </div>
         </div>
       </div>
@@ -143,7 +137,10 @@
 <script lang="ts">
 import { Badge } from "@/backend/badges/badge_model";
 import { Part } from "@/backend/badges/part_model";
+import { Test } from "@/backend/badges/test_model";
+import { StudentBadge } from "@/backend/students/studentBadge_model";
 import { StudentParts } from "@/backend/students/studentParts_model";
+import { StudentTests } from "@/backend/students/studentTests_model";
 import { Student } from "@/backend/students/student_model";
 import { WorkEvent } from "@/backend/workEvent/workEvent_model";
 import router from "@/router";
@@ -154,7 +151,7 @@ import { Vue } from "vue-class-component";
 export default class StudentProfile extends Vue {
   // Class properties will be component data
   student: Student | null = null;
-  activity: WorkEvent[] = [];
+  activity: { date: Date; message: string }[] = [];
 
   async mounted(): Promise<void> {
     await Student.findOne({
@@ -166,15 +163,62 @@ export default class StudentProfile extends Vue {
         {
           model: StudentParts,
         },
+        {
+          model: Test,
+        },
       ],
     }).then((data) => {
       if (data) {
         this.student = data;
         console.log(this.student);
+
+        (data.get("Tests") as Test[]).forEach((test) => {
+          let message = "Completed ";
+          message = message.concat(test.get("name") as string, "");
+
+          this.activity.push({
+            date: (test.get("StudentTests") as StudentTests).get(
+              "createdAt"
+            ) as Date,
+            message,
+          });
+        });
+
+        // <div
+        //     class="text-gray-200 font-semibold flex space-x-2 select-none"
+        //     v-for="sb in this.student.get('Badges')"
+        //     :key="sb"
+        //   >
+        //     <div class="text-blue-500 w-32">
+        //       {{ getDate(sb.get("StudentBadge").get("createdAt")) }}
+        //     </div>
+        //     <p>
+        //       {{ sb.get("badgeName") }}
+        //     </p>
+        //   </div>
+        //   <p
+        //     class="text-gray-400"
+        //     v-if="this.student.get('Badges').length <= 0"
+        //   >
+        //     No Badges Earned
+        //   </p>
+        // </div>
+
+        (data.get("Badges") as Badge[]).forEach((badge) => {
+          let message = "Earned badge ";
+          message = message.concat(badge.get("badgeName") as string, "");
+
+          this.activity.push({
+            date: (badge.get("StudentBadge") as StudentBadge).get(
+              "createdAt"
+            ) as Date,
+            message,
+          });
+        });
       }
     });
 
-    this.activity = await WorkEvent.findAll({
+    WorkEvent.findAll({
       include: {
         model: StudentParts,
         include: [
@@ -187,9 +231,51 @@ export default class StudentProfile extends Vue {
           workEventId: Sequelize.col("WorkEvent.workEventId"),
         },
       },
+    }).then((events) => {
+      events.forEach((event) => {
+        // <div class="text-blue-500 w-32">
+        //       {{ getDate(event.get("date")) }}
+        //     </div>
+        //     <span>Completed parts: </span>
+        //     <p v-for="sp in event.get('StudentParts')" :key="sp">
+        //       {{ sp.get("Part").get("name") }}
+        //     </p>
+
+        let message = "Completed parts: ";
+
+        (event.get("StudentParts") as StudentParts[]).forEach((sp) => {
+          message = message.concat(
+            (sp.get("Part") as Part).get("name") as string,
+            " "
+          );
+        });
+
+        console.log(message);
+        console.log(event.get("date"));
+
+        this.activity.push({
+          date: event.get("date") as Date,
+          message,
+        });
+      });
     });
 
     console.log(this.activity);
+
+    this.activity.sort((a, b) => {
+      const aDate = dayjs(a.date);
+      const bDate = dayjs(b.date);
+
+      if (aDate.isAfter(bDate)) return -1;
+      else {
+        if (aDate.isBefore(bDate)) return 1;
+        else return 0;
+      }
+    });
+  }
+
+  printDate(date: Date): string {
+    return dayjs(date).format("DD/MM/YYYY");
   }
   getDate(): string {
     return dayjs(this.student?.getDataValue("dateOfBirth")).format(
