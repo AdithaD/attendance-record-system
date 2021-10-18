@@ -8,10 +8,10 @@ export async function getStudent(id: number): Promise<Student> {
 }
 
 export async function getStudentAttendance(): Promise<void> {
-  const testSchedule = await TestSchedule.findByPk("completed");
-  if (testSchedule === null) {
+  const attendance = await TestSchedule.findByPk("completed");
+  if (attendance === null) {
     console.log(" Not Found");
   } else {
-    console.log(testSchedule instanceof TestSchedule);
+    console.log(attendance instanceof TestSchedule);
   }
 }

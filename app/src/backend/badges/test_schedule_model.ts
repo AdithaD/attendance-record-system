@@ -41,6 +41,5 @@ export function relations(): void {
   TestSchedule.belongsTo(Test, {
     foreignKey: { name: "testId" },
   });
-
   TestSchedule.belongsTo(Student);
 }
