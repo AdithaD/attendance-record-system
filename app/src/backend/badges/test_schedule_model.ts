@@ -25,6 +25,7 @@ export function model(sequelize: Sequelize): void {
       },
       completed: {
         type: DataTypes.BOOLEAN,
+        primaryKey: true,
         allowNull: false,
         defaultValue: false,
       },

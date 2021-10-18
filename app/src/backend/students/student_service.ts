@@ -22,8 +22,6 @@ export async function createStudent(
   });
 }
 
-//export async function recordAttendance() {}
-
 export async function getAllStudents(): Promise<Student[]> {
   const students = await Student.findAll();
   return students;
