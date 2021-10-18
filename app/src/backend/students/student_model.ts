@@ -3,6 +3,7 @@ import { Badge } from "../badges/badge_model";
 import { Part } from "../badges/part_model";
 import { Test } from "../badges/test_model";
 import { StudentBadge } from "../students/studentBadge_model";
+import { WorkEvent } from "../workEvent/workEvent_model";
 import { StudentParts } from "./studentParts_model";
 import { StudentTests } from "./studentTests_model";
 
@@ -67,5 +68,7 @@ export function relations(): void {
     through: StudentTests,
     foreignKey: "studentId",
   });
+
   Student.hasMany(StudentBadge, { foreignKey: "studentId" });
+  Student.hasMany(StudentParts, { foreignKey: "studentId" });
 }

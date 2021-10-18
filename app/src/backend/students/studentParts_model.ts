@@ -1,4 +1,7 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Part } from "../badges/part_model";
+import { WorkEvent } from "../workEvent/workEvent_model";
+import { Student } from "./student_model";
 
 interface StudentPartsAttributes {
   studentPartId: number;
@@ -35,6 +38,10 @@ export function model(sequelize: Sequelize): void {
       workEventId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: WorkEvent,
+          key: "workEventId",
+        },
       },
     },
     {
@@ -42,4 +49,10 @@ export function model(sequelize: Sequelize): void {
       modelName: "StudentParts",
     }
   );
+}
+
+export function relations(): void {
+  StudentParts.belongsTo(Student, { foreignKey: "studentId" });
+  StudentParts.belongsTo(Part, { foreignKey: "partId" });
+  StudentParts.belongsTo(WorkEvent, { foreignKey: "workEventId" });
 }
