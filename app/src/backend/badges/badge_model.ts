@@ -52,5 +52,5 @@ export function model(sequelize: Sequelize): void {
 export function relation(): void {
   Badge.belongsToMany(Test, { through: "testBadge" });
   Badge.belongsToMany(Student, { through: StudentBadge });
-  Student.hasOne(Badge, { foreignKey: "studentId" });
+  Badge.hasMany(Student, { foreignKey: "studentId" });
 }

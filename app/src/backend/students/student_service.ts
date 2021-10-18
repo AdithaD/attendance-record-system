@@ -26,3 +26,12 @@ export async function getAllStudents(): Promise<Student[]> {
   const students = await Student.findAll();
   return students;
 }
+
+export async function getBadgesForStudents(): Promise<void> {
+  const bfs = await Badge.findByPk("studentId");
+  if (bfs === null) {
+    console.log("StudentId not found");
+  } else {
+    console.log(bfs instanceof Badge);
+  }
+}
