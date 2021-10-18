@@ -1,8 +1,10 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Badge } from "../badges/badge_model";
 import { Part } from "../badges/part_model";
+import { Test } from "../badges/test_model";
 import { StudentBadge } from "../students/studentBadge_model";
 import { StudentParts } from "./studentParts_model";
+import { StudentTests } from "./studentTests_model";
 
 interface StudentAttributes {
   studentId: number;
@@ -61,4 +63,9 @@ export function relations(): void {
     through: StudentBadge,
     foreignKey: "studentId",
   });
+  Student.belongsToMany(Test, {
+    through: StudentTests,
+    foreignKey: "studentId",
+  });
+  Student.hasMany(StudentBadge, { foreignKey: "studentId" });
 }

@@ -94,6 +94,49 @@
           </div>
         </div>
       </div>
+      <div class="rounded shadow-md overflow-y-auto">
+        <div class="flex justify-between bg-gray-700 px-4 py-2">
+          <h2 class="text-2xl text-gray-200 font-bold self-center">
+            Students Completed
+          </h2>
+          <div class="space-x-4 self-center flex">
+            <button
+              class="
+                rounded
+                shadow-md
+                py-2
+                px-4
+                bg-gray-900
+                text-gray-200 text-l
+                font-bold
+                h-1/4
+                transition
+                transform
+                hover:scale-105
+              "
+              type="button"
+              @click="
+                $router.push({ name: 'CompleteTest', params: { id: testId } })
+              "
+            >
+              Record Student Completion
+            </button>
+          </div>
+        </div>
+        <div
+          v-for="student in test.Students"
+          :key="student"
+          class="bg-gray-900 p-4 text-gray-200 font-semibold"
+        >
+          <h3>{{ student.get("firstName") }} {{ student.get("lastName") }}</h3>
+        </div>
+        <p
+          v-if="test.Students.length <= 0"
+          class="text-gray-300 bg-gray-900 p-4"
+        >
+          No students have completed this test
+        </p>
+      </div>
     </div>
     <h1 class="title" v-else>No Student Found</h1>
   </div>
@@ -107,10 +150,19 @@ import { defineComponent, ref } from "vue";
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
 import { TestSchedule } from "@/backend/badges/test_schedule_model";
+import { StudentTests } from "@/backend/students/studentTests_model";
+import { Student } from "@/backend/students/student_model";
 
 export default defineComponent({
   async mounted() {
-    this.test = await Test.findByPk(+this.testId);
+    this.test = await Test.findByPk(+this.testId, {
+      include: {
+        model: Student,
+        through: { attributes: ["createdAt"] },
+      },
+    });
+
+    console.log(this.test);
 
     this.schedule = await TestSchedule.findAll({
       where: {
@@ -122,8 +174,6 @@ export default defineComponent({
       where: { testId: this.testId },
       include: Part,
     });
-
-    console.log(this.topics);
   },
   setup() {
     const route = useRoute();
@@ -132,6 +182,8 @@ export default defineComponent({
     const test = ref(null as Test | null);
     const schedule = ref([] as TestSchedule[]);
     const topics = ref([] as Topic[]);
+
+    const studentTests = ref([] as StudentTests[]);
 
     function formatDate(date: Date): string {
       return dayjs(date).format("DD/MM/YYYY");
@@ -143,6 +195,7 @@ export default defineComponent({
       schedule,
       topics,
       formatDate,
+      studentTests,
     };
   },
 });

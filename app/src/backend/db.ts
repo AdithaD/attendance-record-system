@@ -9,6 +9,8 @@ import * as topic from "./badges/topic_model";
 import * as test from "./badges/test_model";
 import * as studentBadge from "./students/studentBadge_model";
 import * as studentParts from "./students/studentParts_model";
+import * as studentTests from "./students/studentTests_model";
+
 import * as workEvent from "./workEvent/workEvent_model";
 import * as testBadge from "./badges/testBadge_model";
 
@@ -36,6 +38,7 @@ export async function initialise(): Promise<void> {
   test_schedule.model(db);
   studentBadge.model(db);
   studentParts.model(db);
+  studentTests.model(db);
   testBadge.model(db);
 
   test.relations();
@@ -44,6 +47,7 @@ export async function initialise(): Promise<void> {
   test_schedule.relations();
   badge.relations();
   student.relations();
+  studentBadge.relations();
 
   await db.sync().then(() => {
     console.log("db initialized. priting all models");

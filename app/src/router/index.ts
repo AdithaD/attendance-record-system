@@ -12,6 +12,7 @@ import AddTopic from "../views/badges/AddTopic.vue";
 import AddTest from "../views/badges/AddTest.vue";
 import ViewTest from "../views/badges/ViewTest.vue";
 import ViewBadge from "../views/badges/ViewBadge.vue";
+import CompleteTest from "../views/badges/CompleteTest.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -73,6 +74,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/Test/:id",
     name: "ViewTest",
     component: ViewTest,
+  },
+  {
+    path: "/Test/:id/Complete",
+    name: "CompleteTest",
+    component: CompleteTest,
   },
   {
     path: "/Badge/:id",

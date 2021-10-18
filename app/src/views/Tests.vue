@@ -82,6 +82,9 @@
         </button>
       </div>
       <div class="bg-gray-900 p-4 space-y-4">
+        <p v-if="this.schedule.length <= 0" class="text-gray-400 text-center">
+          Your schedule is empty!
+        </p>
         <div
           v-for="schedule in this.schedule"
           :key="schedule.Test.get('testId')"
