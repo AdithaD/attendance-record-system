@@ -58,4 +58,5 @@ export function relation(): void {
   Student.hasMany(TestSchedule, {
     foreignKey: { name: "completed" },
   });
+  Student.belongsTo(Badge);
 }

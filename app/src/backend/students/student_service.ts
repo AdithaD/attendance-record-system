@@ -1,4 +1,6 @@
+import { StudentBadge } from "./studentBadge_model";
 import { Student } from "./student_model";
+import { Badge } from "../badges/badge_model";
 
 export async function getStudent(id: number): Promise<Student> {
   const student = await Student.findOne({ where: { studentId: id } });
