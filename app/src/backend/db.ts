@@ -9,8 +9,11 @@ import * as topic from "./badges/topic_model";
 import * as test from "./badges/test_model";
 import * as studentBadge from "./students/studentBadge_model";
 import * as studentParts from "./students/studentParts_model";
+import * as studentTests from "./students/studentTests_model";
+
 import * as workEvent from "./workEvent/workEvent_model";
 import * as testBadge from "./badges/testBadge_model";
+import { updateBadges } from "./badges/badge_service";
 
 export const db = new Sequelize({
   dialectModule: sqlite3,
@@ -30,20 +33,30 @@ export async function initialise(): Promise<void> {
   part.model(db);
   topic.model(db);
   test.model(db);
-  test_schedule.model(db);
   badge.model(db);
+  workEvent.model(db);
+
+  test_schedule.model(db);
   studentBadge.model(db);
   studentParts.model(db);
-  workEvent.model(db);
+  studentTests.model(db);
   testBadge.model(db);
 
   test.relations();
   topic.relations();
   part.relations();
   test_schedule.relations();
+  badge.relations();
+  student.relations();
+  studentBadge.relations();
+  testBadge.relations();
+  workEvent.relations();
+  studentParts.relations();
 
-  await db.sync({ alter: true }).then(() => {
+  await db.sync().then(() => {
     console.log("db initialized. priting all models");
     console.log(db.models);
   });
+
+  updateBadges().then(() => console.log("success"));
 }

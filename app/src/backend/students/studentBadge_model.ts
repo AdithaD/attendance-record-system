@@ -5,7 +5,6 @@ import { Student } from "../students/student_model";
 interface StudentBadgeAttributes {
   badgeId: number;
   studentId: number;
-  completionDate: Date;
 }
 
 export class StudentBadge extends Model<StudentBadgeAttributes> {}
@@ -30,14 +29,15 @@ export function model(sequelize: Sequelize): void {
         },
         primaryKey: true,
       },
-      completionDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
     },
     {
       sequelize,
       modelName: "StudentBadge",
     }
   );
+}
+
+export function relations(): void {
+  StudentBadge.belongsTo(Student, { foreignKey: "studentId" });
+  StudentBadge.belongsTo(Badge, { foreignKey: "badgeId" });
 }

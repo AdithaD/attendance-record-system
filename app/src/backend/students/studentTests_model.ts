@@ -4,7 +4,6 @@ interface StudentTestsAttributes {
   studentTestId: number;
   testId: number;
   studentId: number;
-  workEventId: number;
 }
 
 type StudentTestsCreationAttributes = Optional<
@@ -29,10 +28,6 @@ export function model(sequelize: Sequelize): void {
         allowNull: false,
       },
       studentId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      workEventId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

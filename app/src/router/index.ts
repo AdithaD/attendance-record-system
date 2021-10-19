@@ -11,7 +11,9 @@ import RecordAttendance from "../views/attendance/RecordAttendance.vue";
 import AddTopic from "../views/badges/AddTopic.vue";
 import AddTest from "../views/badges/AddTest.vue";
 import ViewTest from "../views/badges/ViewTest.vue";
-
+import ViewBadge from "../views/badges/ViewBadge.vue";
+import CompleteTest from "../views/badges/CompleteTest.vue";
+import ScheduleTest from "../views/badges/ScheduleTest.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -72,6 +74,26 @@ const routes: Array<RouteRecordRaw> = [
     path: "/Test/:id",
     name: "ViewTest",
     component: ViewTest,
+  },
+  {
+    path: "/Test/:id/:sched_id?",
+    name: "ViewTest",
+    component: ViewTest,
+  },
+  {
+    path: "/Test/:id/Complete",
+    name: "CompleteTest",
+    component: CompleteTest,
+  },
+  {
+    path: "/Test/:id/Schedule",
+    name: "ScheduleTest",
+    component: ScheduleTest,
+  },
+  {
+    path: "/Badge/:id",
+    name: "ViewBadge",
+    component: ViewBadge,
   },
 ];
 

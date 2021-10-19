@@ -2,24 +2,40 @@ import { Sequelize, Model, DataTypes } from "sequelize";
 import { Test } from "./test_model";
 
 interface TestScheduleAttributes {
+  testScheduleId: number;
   testId: number;
   date: Date;
+  teacher: string;
   completed: boolean;
 }
-
-export class TestSchedule extends Model<TestScheduleAttributes> {}
+type TestScheduleCreationAttributes = Optional<
+  TestScheduleAttributes,
+  "testScheduleId"
+>;
+export class TestSchedule extends Model<
+  TestScheduleAttributes,
+  TestScheduleCreationAttributes
+> {}
 
 export function model(sequelize: Sequelize): void {
   TestSchedule.init(
     {
-      testId: {
+      testScheduleId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
+      },
+      testId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       date: {
         type: DataTypes.DATE,
-        primaryKey: true,
         allowNull: false,
+      },
+      teacher: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       completed: {
         type: DataTypes.BOOLEAN,
