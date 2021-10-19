@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 import { StudentBadge } from "../students/studentBadge_model";
 import { StudentTests } from "../students/studentTests_model";
 import { Student } from "../students/student_model";
-import { Badge, Tier, Type } from "./badge_model";
+import { Badge } from "./badge_model";
 import { Part } from "./part_model";
 import { TestBadge } from "./testBadge_model";
 import { Test } from "./test_model";
@@ -209,11 +209,25 @@ export async function updateBadges(): Promise<void> {
   });
 }
 
+export enum Type {
+  A,
+  S,
+  C,
+}
+
+export enum Tier {
+  Diamond,
+  Platinum,
+  Lithium,
+}
+
 export class StudentBadgeCount {
   public studentId: number;
   public diamond: number;
   public platinum: number;
   public lithium: number;
+  public static readonly platinumWeightingNumber: number = 2;
+  public static readonly lithiumWeightingNumber: number = 3;
 
   constructor(
     studentId: number,
@@ -227,6 +241,59 @@ export class StudentBadgeCount {
     this.lithium = lithium;
   }
   public getValue(): number {
-    return 0;
+    return (
+      this.diamond +
+      this.platinum * StudentBadgeCount.platinumWeightingNumber +
+      this.lithium * StudentBadgeCount.lithiumWeightingNumber
+    );
   }
 }
+export async function getLeaderboard(): Promise<StudentBadgeCount[]> {
+  const students = await Student.findAll({ include: Badge });
+  const sbc = [] as StudentBadgeCount[];
+  students.forEach((student) => {
+    const badgeCounts = [0, 0, 0];
+    const badges = student.get("Badges") as Badge[];
+    badges.forEach((badge) => {
+      switch (badge.get("badgeTier") as string) {
+        //diamond for base value
+        case Tier.Diamond.toString():
+          badgeCounts[0] += 1;
+          break;
+        //platinum in middle value of array
+        case Tier.Platinum.toString():
+          badgeCounts[1] += 1;
+          break;
+        //lithium as top value within array
+        case Tier.Lithium.toString():
+          badgeCounts[2] += 1;
+          break;
+
+        default:
+          break;
+      }
+    });
+    sbc.push(
+      new StudentBadgeCount(
+        student.get("studentId") as number,
+        badgeCounts[0],
+        badgeCounts[1],
+        badgeCounts[2]
+      )
+    );
+  });
+  sbc.sort((a, b) => {
+    if (a.getValue() < b.getValue()) return 1;
+    else {
+      if (a.getValue() > b.getValue()) return -1;
+      else {
+        return 0;
+      }
+    }
+  });
+  return sbc;
+}
+
+//display each student with total number of badges
+
+//findAndCountAll method for the array

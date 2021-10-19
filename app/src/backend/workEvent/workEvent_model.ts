@@ -1,5 +1,4 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
-import { Part } from "../badges/part_model";
 import { StudentParts } from "../students/studentParts_model";
 
 interface WorkEventAttributes {

@@ -12,7 +12,7 @@ export enum Type {
 
 export enum Tier {
   Diamond,
-  Platnium,
+  Platinum,
   Lithium,
 }
 

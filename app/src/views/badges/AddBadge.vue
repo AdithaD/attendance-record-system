@@ -295,7 +295,7 @@ export default class AddTopic extends Vue {
   selectedTier = Tier.Diamond;
   tierOptions = [
     { name: "Diamond", value: Tier.Diamond },
-    { name: "Platinum", value: Tier.Platnium },
+    { name: "Platinum", value: Tier.Platinum },
     { name: "Lithium", value: Tier.Lithium },
   ];
 
