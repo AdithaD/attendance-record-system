@@ -293,7 +293,3 @@ export async function getLeaderboard(): Promise<StudentBadgeCount[]> {
   });
   return sbc;
 }
-
-//display each student with total number of badges
-
-//findAndCountAll method for the array
