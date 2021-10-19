@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
+import { Sequelize, Model, DataTypes, Optional } from "sequelize";
 import { Test } from "./test_model";
 
 interface TestScheduleAttributes {
