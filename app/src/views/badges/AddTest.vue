@@ -2,6 +2,7 @@
   <div class="p-4 space-y-8 w-screen">
     <div class="flex justify-between items-stretch">
       <h1 class="title">Add Test</h1>
+
       <div class="flex space-x-4">
         <button
           class="
@@ -68,6 +69,11 @@
           </svg>
         </button>
       </div>
+    </div>
+    <div v-if="this.errors.length > 0" class="rounded bg-gray-900 p-2">
+      <p class="text-red-500" v-for="error in this.errors" :key="error">
+        {{ error }}
+      </p>
     </div>
     <div class="space-y-4">
       <TextField v-model="testName" title="Test Name" />
@@ -150,6 +156,11 @@ export default class AddTest extends Vue {
     while (this.errors.length > 0) {
       this.errors.pop();
     }
+
+    if (this.$store.state.topics.length <= 0) {
+      this.errors.push("Cannot add test without any topics");
+    }
+
     if (this.errors.length == 0) {
       await addTest(this.$store.state.testName, this.$store.state.topics);
       this.$store.commit("clearTempTest");

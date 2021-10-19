@@ -85,7 +85,7 @@
               text-center
             "
           >
-            {{ getDate(schedule.Test.get("date")) }}
+            {{ getDate(schedule.get("date")) }}
           </p>
           <div
             class="

@@ -134,7 +134,7 @@ export default defineComponent({
   },
   methods: {
     validate(): boolean {
-      let hasParts = this.parts.length != 0;
+      let hasParts = this.parts.length > 0;
       let hasName = this.name != "";
 
       const payload = new Topic(this.name, this.isOptional, this.parts);
