@@ -1,6 +1,11 @@
 <template>
   <div class="p-4 space-y-6 w-screen h-screen flex flex-col select-none">
     <h1 class="title">Record Attendance</h1>
+    <div class="bg-gray-900 p-4" v-if="this.errors.length > 0">
+      <p class="text-red-500" v-for="e in this.errors" :key="e">
+        {{ e }}
+      </p>
+    </div>
     <div class="">
       <DateField v-model="this.date" title="Event Date" />
     </div>
@@ -270,7 +275,7 @@
           hover:scale-105 hover:bg-blue-500
         "
         type="button"
-        @click="record"
+        @click="validate"
       >
         Submit
       </button>
@@ -283,6 +288,10 @@ import { Options, Vue } from "vue-class-component";
 import DateField from "@/components/DateField.vue";
 import { Student } from "@/backend/students/student_model";
 import { Part } from "@/backend/badges/part_model";
+import dayjs from "dayjs";
+import { recordAttendance } from "@/backend/students/student_service";
+// import { WorkEvent } from "@/backend/workEvent/workEvent_model";
+// import dayjs from "dayjs";
 
 @Options({
   components: {
@@ -295,6 +304,8 @@ export default class RecordAttendance extends Vue {
   parts: { part: Part; list: number }[] = [];
   studentSearchTerms = "";
   partSearchTerms = "";
+
+  errors: string[] = [];
 
   mounted(): void {
     Student.findAll().then((data) => {
@@ -399,10 +410,26 @@ export default class RecordAttendance extends Vue {
     if (partObj) partObj.list = dest;
   }
 
-  record(): void {
-    // let parts = this.unselectedParts;
-    // let students = this.unselectedStudents;
-    // Attendance
+  validate(): boolean {
+    while (this.errors.length > 0) this.errors.pop();
+
+    if (!(this.selectedStudents.length > 0))
+      this.errors.push("At least one student must be selected.");
+    if (!(this.selectedParts.length > 0))
+      this.errors.push("At least one part must be selected.");
+    if (!dayjs(this.date, "DD/MM/YYYY").isValid())
+      this.errors.push("Date is invalid");
+
+    if (!(this.errors.length > 0)) {
+      recordAttendance(
+        this.selectedParts,
+        this.selectedStudents,
+        dayjs(this.date).toDate()
+      );
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 </script>

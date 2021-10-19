@@ -1,23 +1,22 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
-interface studentTestsAttributes {
+interface StudentTestsAttributes {
   studentTestId: number;
   testId: number;
   studentId: number;
-  workEventId: number;
 }
 
-type studentTestsCreationAttributes = Optional<
-  studentTestsAttributes,
+type StudentTestsCreationAttributes = Optional<
+  StudentTestsAttributes,
   "studentTestId"
 >;
-export class studentTests extends Model<
-  studentTestsAttributes,
-  studentTestsCreationAttributes
+export class StudentTests extends Model<
+  StudentTestsAttributes,
+  StudentTestsCreationAttributes
 > {}
 
 export function model(sequelize: Sequelize): void {
-  studentTests.init(
+  StudentTests.init(
     {
       studentTestId: {
         type: DataTypes.INTEGER,
@@ -32,14 +31,10 @@ export function model(sequelize: Sequelize): void {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      workEventId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
     },
     {
       sequelize,
-      modelName: "studentTests",
+      modelName: "StudentTests",
     }
   );
 }

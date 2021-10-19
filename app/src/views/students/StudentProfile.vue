@@ -86,11 +86,48 @@
         </div>
       </div>
 
-      <div class="rounded shadow-md bg-gray-700 py-2 px-4">
-        <h2 class="text-2xl text-gray-200 font-bold">Badges</h2>
+      <div class="rounded shadow-md">
+        <h2
+          class="text-2xl text-gray-200 font-bold bg-gray-700 py-2 px-4 rounded"
+        >
+          Badges
+        </h2>
+        <div class="bg-gray-900 p-4 rounded">
+          <div
+            class="text-gray-200 font-semibold flex space-x-2 select-none"
+            v-for="sb in this.student.get('Badges')"
+            :key="sb"
+          >
+            <p>
+              {{ sb.get("badgeName") }}
+            </p>
+          </div>
+          <p
+            class="text-gray-400"
+            v-if="this.student.get('Badges').length <= 0"
+          >
+            No Badges Earned
+          </p>
+        </div>
       </div>
-      <div class="rounded shadow-md bg-gray-700 py-2 px-4">
-        <h2 class="text-2xl text-gray-200 font-bold">Attendance</h2>
+      <div class="rounded shadow-md">
+        <h2
+          class="text-2xl text-gray-200 font-bold bg-gray-700 py-2 px-4 rounded"
+        >
+          Activity
+        </h2>
+        <div class="bg-gray-900 p-4 rounded">
+          <div
+            class="text-gray-200 font-semibold flex space-x-2 select-none"
+            v-for="event in this.activity"
+            :key="event"
+          >
+            <div class="text-blue-500 w-32">
+              {{ printDate(event.date) }}
+            </div>
+            <p>{{ event.message }}</p>
+          </div>
+        </div>
       </div>
     </div>
     <h1 class="title" v-else>No Student Found</h1>
@@ -98,23 +135,148 @@
 </template>
 
 <script lang="ts">
+import { getStudentAttendanceByWeek } from "@/backend/attendance/attendance_service";
+import { Badge } from "@/backend/badges/badge_model";
+import { Part } from "@/backend/badges/part_model";
+import { Test } from "@/backend/badges/test_model";
+import { StudentBadge } from "@/backend/students/studentBadge_model";
+import { StudentParts } from "@/backend/students/studentParts_model";
+import { StudentTests } from "@/backend/students/studentTests_model";
 import { Student } from "@/backend/students/student_model";
+import { WorkEvent } from "@/backend/workEvent/workEvent_model";
 import router from "@/router";
 import dayjs from "dayjs";
+import { Sequelize } from "sequelize";
 import { Vue } from "vue-class-component";
 
 export default class StudentProfile extends Vue {
   // Class properties will be component data
   student: Student | null = null;
+  activity: { date: Date; message: string }[] = [];
 
-  mounted(): void {
-    Student.findOne({
+  async mounted(): Promise<void> {
+    await Student.findOne({
       where: { studentId: this.$route.params.id },
+      include: [
+        {
+          model: Badge,
+        },
+        {
+          model: StudentParts,
+        },
+        {
+          model: Test,
+        },
+      ],
     }).then((data) => {
       if (data) {
         this.student = data;
+        console.log(this.student);
+
+        (data.get("Tests") as Test[]).forEach((test) => {
+          let message = "Completed ";
+          message = message.concat(test.get("name") as string, "");
+
+          this.activity.push({
+            date: (test.get("StudentTests") as StudentTests).get(
+              "createdAt"
+            ) as Date,
+            message,
+          });
+        });
+
+        // <div
+        //     class="text-gray-200 font-semibold flex space-x-2 select-none"
+        //     v-for="sb in this.student.get('Badges')"
+        //     :key="sb"
+        //   >
+        //     <div class="text-blue-500 w-32">
+        //       {{ getDate(sb.get("StudentBadge").get("createdAt")) }}
+        //     </div>
+        //     <p>
+        //       {{ sb.get("badgeName") }}
+        //     </p>
+        //   </div>
+        //   <p
+        //     class="text-gray-400"
+        //     v-if="this.student.get('Badges').length <= 0"
+        //   >
+        //     No Badges Earned
+        //   </p>
+        // </div>
+
+        (data.get("Badges") as Badge[]).forEach((badge) => {
+          let message = "Earned badge ";
+          message = message.concat(badge.get("badgeName") as string, "");
+
+          this.activity.push({
+            date: (badge.get("StudentBadge") as StudentBadge).get(
+              "createdAt"
+            ) as Date,
+            message,
+          });
+        });
       }
     });
+
+    WorkEvent.findAll({
+      include: {
+        model: StudentParts,
+        include: [
+          {
+            model: Part,
+          },
+        ],
+        where: {
+          studentId: this.$route.params.id,
+          workEventId: Sequelize.col("WorkEvent.workEventId"),
+        },
+      },
+    }).then((events) => {
+      events.forEach((event) => {
+        // <div class="text-blue-500 w-32">
+        //       {{ getDate(event.get("date")) }}
+        //     </div>
+        //     <span>Completed parts: </span>
+        //     <p v-for="sp in event.get('StudentParts')" :key="sp">
+        //       {{ sp.get("Part").get("name") }}
+        //     </p>
+
+        let message = "Completed parts: ";
+
+        (event.get("StudentParts") as StudentParts[]).forEach((sp) => {
+          message = message.concat(
+            (sp.get("Part") as Part).get("name") as string,
+            " "
+          );
+        });
+
+        console.log(message);
+        console.log(event.get("date"));
+
+        this.activity.push({
+          date: event.get("date") as Date,
+          message,
+        });
+      });
+    });
+
+    console.log(this.activity);
+
+    this.activity.sort((a, b) => {
+      const aDate = dayjs(a.date);
+      const bDate = dayjs(b.date);
+
+      if (aDate.isAfter(bDate)) return -1;
+      else {
+        if (aDate.isBefore(bDate)) return 1;
+        else return 0;
+      }
+    });
+  }
+
+  printDate(date: Date): string {
+    return dayjs(date).format("DD/MM/YYYY");
   }
   getDate(): string {
     return dayjs(this.student?.getDataValue("dateOfBirth")).format(

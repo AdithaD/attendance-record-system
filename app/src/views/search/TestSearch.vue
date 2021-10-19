@@ -3,6 +3,7 @@
     v-for="(test, i) in this.tests"
     :key="test.getDataValue('testId')"
     class="flex space-x-2"
+    @click="openTest(test)"
   >
     <p
       class="
@@ -42,12 +43,15 @@ import { defineComponent, onMounted } from "@vue/runtime-core";
 import { ref } from "vue";
 import { Test } from "@/backend/badges/test_model";
 import sequelize from "sequelize";
+import { useRouter } from "vue-router";
+import { openTest } from "@/utils/utils";
 export default defineComponent({
   props: {
     terms: { type: String, required: true },
   },
   setup(props) {
     const tests = ref([] as Test[]);
+    const router = useRouter();
 
     onMounted(async () => {
       tests.value = await Test.findAll({
@@ -63,6 +67,8 @@ export default defineComponent({
 
     return {
       tests,
+      router,
+      openTest,
     };
   },
 });
