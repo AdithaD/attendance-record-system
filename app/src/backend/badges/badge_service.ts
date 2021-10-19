@@ -222,7 +222,7 @@ export enum Tier {
 }
 
 export class StudentBadgeCount {
-  public studentId: number;
+  public student: Student;
   public diamond: number;
   public platinum: number;
   public lithium: number;
@@ -230,12 +230,12 @@ export class StudentBadgeCount {
   public static readonly lithiumWeightingNumber: number = 3;
 
   constructor(
-    studentId: number,
+    student: Student,
     diamond: number,
     platinum: number,
     lithium: number
   ) {
-    this.studentId = studentId;
+    this.student = student;
     this.diamond = diamond;
     this.platinum = platinum;
     this.lithium = lithium;
@@ -275,7 +275,7 @@ export async function getLeaderboard(): Promise<StudentBadgeCount[]> {
     });
     sbc.push(
       new StudentBadgeCount(
-        student.get("studentId") as number,
+        student,
         badgeCounts[0],
         badgeCounts[1],
         badgeCounts[2]

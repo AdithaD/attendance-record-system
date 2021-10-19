@@ -138,13 +138,13 @@
         Top Students
       </h2>
       <div
-        v-if="this.students.length > 0"
+        v-if="this.leaderboard.length > 0"
         class="bg-gray-900 p-4 rounded space-y-4 overflow-y-scroll flex-grow"
       >
         <div
-          @click="openProfile(student)"
-          v-for="(student, i) in this.students"
-          :key="student.getDataValue('studentId')"
+          @click="openProfile(sbc.student)"
+          v-for="(sbc, i) in this.leaderboard"
+          :key="sbc.student.getDataValue('studentId')"
           class="flex space-x-2"
         >
           <p
@@ -161,8 +161,9 @@
           >
             {{ i + 1 }}
           </p>
-          <p
+          <div
             class="
+              flex
               bg-gray-700
               py-4
               text-gray-200
@@ -173,11 +174,21 @@
               transition-colors
               hover:text-white hover:bg-blue-500
               flex-grow
+              justify-between
             "
           >
-            {{ student.getDataValue("firstName") }}
-            {{ student.getDataValue("lastName") }}
-          </p>
+            <p class="">
+              {{ sbc.student.getDataValue("firstName") }}
+              {{ sbc.student.getDataValue("lastName") }}
+            </p>
+            <div class="bg-gray-900 rounded px-2 space-x-2">
+              <span class="animate-pulse text-yellow-300"
+                >L: {{ sbc.lithium }}
+              </span>
+              <span class="text-blue-400">D: {{ sbc.diamond }} </span>
+              <span class="text-gray-400">P: {{ sbc.platinum }} </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -185,6 +196,10 @@
 </template>
 
 <script lang="ts">
+import {
+  getLeaderboard,
+  StudentBadgeCount,
+} from "@/backend/badges/badge_service";
 import { Student } from "@/backend/students/student_model";
 import router from "@/router";
 import { defineComponent } from "@vue/runtime-core";
@@ -192,13 +207,14 @@ export default defineComponent({
   components: {},
   data() {
     return {
-      students: [] as Student[],
+      leaderboard: [] as StudentBadgeCount[],
       isSearchOptionsOpen: false,
       searchTerms: "",
     };
   },
   async mounted() {
-    this.students = await Student.findAll({});
+    this.leaderboard = await getLeaderboard();
+    console.log(this.leaderboard);
   },
   methods: {
     toggle(): void {
